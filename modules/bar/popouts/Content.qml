@@ -29,6 +29,11 @@ Item {
         }
 
         Popout {
+                    name: "calendar"
+                    sourceComponent: Calendar {}
+                }
+
+        Popout {
             name: "network"
             sourceComponent: Network {}
         }

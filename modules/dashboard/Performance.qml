@@ -113,6 +113,7 @@ RowLayout {
 
                 text: res.label1
                 font.pointSize: Appearance.font.size.extraLarge * res.primaryMult
+                font.family: Appearance.font.family.mono
             }
 
             StyledText {
@@ -121,6 +122,7 @@ RowLayout {
                 text: res.sublabel1
                 color: Colours.palette.m3onSurfaceVariant
                 font.pointSize: Appearance.font.size.smaller * res.primaryMult
+                font.family: Appearance.font.family.mono
             }
         }
 
@@ -135,6 +137,7 @@ RowLayout {
 
                 text: res.label2
                 font.pointSize: Appearance.font.size.smaller * res.primaryMult
+                font.family: Appearance.font.family.mono
             }
 
             StyledText {
@@ -143,6 +146,7 @@ RowLayout {
                 text: res.sublabel2
                 color: Colours.palette.m3onSurfaceVariant
                 font.pointSize: Appearance.font.size.small * res.primaryMult
+                font.family: Appearance.font.family.mono
             }
         }
 

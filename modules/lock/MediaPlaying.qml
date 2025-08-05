@@ -12,6 +12,9 @@ RowLayout {
 
     required property bool isLarge
 
+    // Hide the entire component if no media is active
+    visible: Players.active !== null && Players.active !== undefined
+    
     spacing: Appearance.spacing.large * (isLarge ? 2 : 1.5)
     width: isLarge ? Config.lock.sizes.mediaWidth : Config.lock.sizes.mediaWidthSmall
 

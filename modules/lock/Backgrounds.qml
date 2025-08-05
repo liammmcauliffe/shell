@@ -19,6 +19,9 @@ Item {
     required property bool isNormal
     required property bool isLarge
 
+    // Add property to control media visibility
+    property bool hasActiveMedia: Players.active !== null && Players.active !== undefined
+
     readonly property real clockBottom: innerMask.anchors.margins + clockPath.height
     readonly property real inputTop: innerMask.anchors.margins + inputPath.height
     readonly property real weatherTop: innerMask.anchors.margins + weatherPath.height
@@ -278,8 +281,9 @@ Item {
         ShapePath {
             id: mediaPath
 
-            property int width: root.locked ? (root.isLarge ? Config.lock.sizes.mediaWidth : Config.lock.sizes.mediaWidthSmall) - Config.lock.sizes.border / 4 : 0
-            property real height: root.locked ? (root.isLarge ? Config.lock.sizes.mediaHeight : Config.lock.sizes.mediaHeightSmall) : 0
+            // Only show media curve if locked AND has active media AND screen is normal size
+            property int width: root.locked && root.hasActiveMedia && root.isNormal ? (root.isLarge ? Config.lock.sizes.mediaWidth : Config.lock.sizes.mediaWidthSmall) - Config.lock.sizes.border / 4 : 0
+            property real height: root.locked && root.hasActiveMedia && root.isNormal ? (root.isLarge ? Config.lock.sizes.mediaHeight : Config.lock.sizes.mediaHeightSmall) : 0
 
             readonly property real rounding: Appearance.rounding.large * 2
             readonly property real roundingX: width < rounding * 2 ? width / 2 : rounding
@@ -358,9 +362,9 @@ Item {
 
             PathArc {
                 relativeX: -buttonsPath.roundingX
-                relativeY: buttonsPath.rounding
+                relativeY: buttonsPath.roundingY
                 radiusX: Math.min(buttonsPath.rounding, buttonsPath.width)
-                radiusY: buttonsPath.rounding, buttonsPath.height
+                radiusY: Math.min(buttonsPath.rounding, buttonsPath.height)
             }
             PathLine {
                 relativeX: -(buttonsPath.width - buttonsPath.roundingX * 2)
@@ -423,9 +427,9 @@ Item {
 
             PathArc {
                 relativeX: -statusPath.roundingX
-                relativeY: -statusPath.rounding
+                relativeY: -statusPath.roundingY
                 radiusX: Math.min(statusPath.rounding, statusPath.width)
-                radiusY: statusPath.rounding
+                radiusY: Math.min(statusPath.rounding, statusPath.height)
                 direction: PathArc.Counterclockwise
             }
             PathLine {

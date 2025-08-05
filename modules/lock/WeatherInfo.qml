@@ -44,6 +44,7 @@ RowLayout {
             color: Colours.palette.m3primary
             horizontalAlignment: Text.AlignHCenter
             font.pointSize: Appearance.font.size.extraLarge
+            font.family: Appearance.font.family.mono
             font.weight: 500
         }
 
@@ -55,6 +56,7 @@ RowLayout {
             text: Weather.description || qsTr("No weather")
             horizontalAlignment: Text.AlignHCenter
             font.pointSize: Appearance.font.size.large
+            font.family: Appearance.font.family.mono
             elide: Text.ElideRight
         }
     }

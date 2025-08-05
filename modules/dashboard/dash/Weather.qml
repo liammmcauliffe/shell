@@ -41,6 +41,7 @@ Item {
             text: Config.services.useFahrenheit ? Weather.tempF : Weather.tempC
             color: Colours.palette.m3primary
             font.pointSize: Appearance.font.size.extraLarge
+            font.family: Appearance.font.family.mono
             font.weight: 500
         }
 

@@ -17,7 +17,7 @@ WrapperItem {
     readonly property real nonAnimHeight: {
         if (notifs.active && notifs.item.count > 0) {
             const count = Math.min(notifs.item.count, Config.lock.maxNotifs);
-            let height = status.implicitHeight + Appearance.spacing.normal + Appearance.spacing.smaller * (count - 1);
+            let height = status.implicitHeight + Appearance.spacing.large + Appearance.spacing.smaller * (count - 1);
             for (let i = 0; i < count; i++)
                 height += notifs.item.itemAtIndex(i)?.nonAnimHeight ?? 0;
             return height + margin;
@@ -31,7 +31,7 @@ WrapperItem {
 
     margin: Appearance.padding.large * 2
     rightMargin: 0
-    topMargin: 0
+    topMargin: -10
 
     Timer {
         running: true
@@ -53,31 +53,61 @@ WrapperItem {
         }
     }
 
-    ColumnLayout {
-        spacing: Appearance.spacing.normal
+    function getBatteryIcon(percentage, isCharging, state) {
+        // If charging, return charging icon
+        if (isCharging) {
+            return "󰂄 ";
+        }
+        
+        // If state is unknown, return unknown icon
+        if (state === "unknown" || state === "UnknownState") {
+            return "󰂑 ";
+        }
+        
+        // Return battery level icon based on percentage
+        if (percentage >= 1.0) return "󰁹 ";      // 100%
+        if (percentage >= 0.9) return "󰂂 ";      // 90%
+        if (percentage >= 0.8) return "󰂁 ";      // 80%
+        if (percentage >= 0.7) return "󰂀 ";      // 70%
+        if (percentage >= 0.6) return "󰁿 ";      // 60%
+        if (percentage >= 0.5) return "󰁾 ";      // 50%
+        if (percentage >= 0.4) return "󰁽 ";      // 40%
+        if (percentage >= 0.3) return "󰁼 ";      // 30%
+        if (percentage >= 0.2) return "󰁻 ";      // 20%
+        if (percentage >= 0.1) return "󰁺 ";      // 10%
+        return "󰂎 ";                              // <10%
+    }
 
+    ColumnLayout {
+        spacing: Appearance.spacing.large
+        
         RowLayout {
             id: status
-
+            
             Layout.fillWidth: true
+            Layout.alignment: Qt.AlignVCenter
             spacing: Appearance.spacing.small
 
             Loader {
                 Layout.alignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-
+                Layout.preferredHeight: Appearance.font.size.large * 1.2
+                
                 active: UPower.displayDevice.isLaptopBattery
                 asynchronous: true
 
                 sourceComponent: StyledText {
                     animate: true
-                    text: qsTr("%1%2% remaining").arg(UPower.onBattery ? "" : "(+) ").arg(Math.round(UPower.displayDevice.percentage * 100))
+                    text: qsTr("%1 %2").arg(Math.round(UPower.displayDevice.percentage * 100) + "%").arg(getBatteryIcon(UPower.displayDevice.percentage, !UPower.onBattery, UPower.displayDevice.state))
+                    font.pointSize: Appearance.font.size.large
                     color: !UPower.onBattery || UPower.displayDevice.percentage > 0.2 ? Colours.palette.m3onSurface : Colours.palette.m3error
+                    verticalAlignment: Text.AlignVCenter
+			        font.family: Appearance.font.family.mono
                 }
             }
 
             MaterialIcon {
                 Layout.alignment: Qt.AlignVCenter
+                Layout.preferredHeight: Appearance.font.size.large * 1.2
 
                 animate: true
                 text: Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "wifi_off"
@@ -88,6 +118,7 @@ WrapperItem {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
                 Layout.maximumWidth: item?.implicitWidth ?? 0
+                Layout.preferredHeight: Appearance.font.size.large * 1.2
 
                 active: !UPower.displayDevice.isLaptopBattery
                 asynchronous: true
@@ -95,13 +126,15 @@ WrapperItem {
                 sourceComponent: StyledText {
                     animate: true
                     text: Network.active?.ssid ?? ""
-                    font.pointSize: Appearance.font.size.normal
+                    font.pointSize: Appearance.font.size.large
                     elide: Text.ElideRight
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
             MaterialIcon {
                 Layout.alignment: Qt.AlignVCenter
+                Layout.preferredHeight: Appearance.font.size.large * 1.2
 
                 animate: true
                 text: Bluetooth.defaultAdapter.enabled ? "bluetooth" : "bluetooth_disabled"
@@ -110,13 +143,15 @@ WrapperItem {
 
             Loader {
                 Layout.alignment: Qt.AlignVCenter
+                Layout.preferredHeight: Appearance.font.size.large * 1.2
                 active: !UPower.displayDevice.isLaptopBattery
                 asynchronous: true
 
                 sourceComponent: StyledText {
                     animate: true
                     text: qsTr("%n device(s) connected", "", Bluetooth.devices.values.filter(d => d.connected).length)
-                    font.pointSize: Appearance.font.size.normal
+                    font.pointSize: Appearance.font.size.large
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
         }
@@ -182,7 +217,7 @@ WrapperItem {
                             target: notif
                             property: "x"
                             to: (notif.x >= 0 ? Config.notifs.sizes.width : -Config.notifs.sizes.width) * 2
-                            duration: Appearance.anim.durations.normal
+                            duration: Appearance.anim.durations.large
                             easing.bezierCurve: Appearance.anim.curves.emphasized
                         }
                         PropertyAction {
@@ -234,7 +269,7 @@ WrapperItem {
     }
 
     component Anim: NumberAnimation {
-        duration: Appearance.anim.durations.normal
+        duration: Appearance.anim.durations.large
         easing.type: Easing.BezierSpline
         easing.bezierCurve: Appearance.anim.curves.standard
     }

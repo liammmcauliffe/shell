@@ -52,10 +52,10 @@ GridLayout {
         Layout.column: 1
         Layout.columnSpan: 3
         Layout.fillWidth: true
-        Layout.preferredHeight: calendar.implicitHeight
+        Layout.preferredHeight: actions.implicitHeight
 
-        Calendar {
-            id: calendar
+        Actions {
+            id: actions
         }
     }
 

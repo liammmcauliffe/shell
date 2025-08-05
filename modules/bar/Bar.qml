@@ -24,6 +24,10 @@ Item {
         const th = tray.implicitHeight;
         const trayItems = tray.items;
 
+        // Check clock hover area for calendar
+        const clockY = clock.y;
+        const clockHeight = clock.implicitHeight;
+        
         // Check status icons hover areas
         let statusIconFound = false;
         for (const area of statusIconsInner.hoverAreas) {
@@ -43,7 +47,11 @@ Item {
             }
         }
 
-        if (y >= awy && y <= awy + aw.implicitHeight) {
+        if (y >= clockY && y <= clockY + clockHeight) {
+            popouts.currentName = "calendar";
+            popouts.currentCenter = Qt.binding(() => clock.y + clock.implicitHeight / 2);
+            popouts.hasCurrent = true;
+        } else if (y >= awy && y <= awy + aw.implicitHeight) {
             popouts.currentName = "activewindow";
             popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
             popouts.hasCurrent = true;

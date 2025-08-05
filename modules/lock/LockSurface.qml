@@ -108,7 +108,8 @@ WlSessionLockSurface {
     Loader {
         id: media
 
-        active: root.screen.width > Config.lock.sizes.smallScreenWidth
+        // Only show if screen is large enough AND there's active media
+        active: root.screen.width > Config.lock.sizes.smallScreenWidth && (Players.active !== null && Players.active !== undefined)
         asynchronous: true
 
         state: root.screen.width > Config.lock.sizes.largeScreenWidth ? "tl" : "br"

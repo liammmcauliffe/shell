@@ -27,6 +27,7 @@ Item {
             text: root.timeComponents[0]
             color: Colours.palette.m3secondary
             font.pointSize: Appearance.font.size.extraLarge
+            font.family: Appearance.font.family.mono
             font.weight: 600
         }
 
@@ -35,6 +36,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             text: "•••"
             color: Colours.palette.m3primary
+            font.family: Appearance.font.family.mono
             font.pointSize: Appearance.font.size.extraLarge * 0.9
         }
 
@@ -43,6 +45,7 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             text: root.timeComponents[1]
             color: Colours.palette.m3secondary
+            font.family: Appearance.font.family.mono
             font.pointSize: Appearance.font.size.extraLarge
             font.weight: 600
         }
@@ -58,6 +61,7 @@ Item {
                 text: root.timeComponents[2] ?? ""
                 color: Colours.palette.m3secondary
                 font.pointSize: Appearance.font.size.large
+                font.family: Appearance.font.family.mono
                 font.weight: 600
             }
         }
@@ -69,6 +73,7 @@ Item {
             text: Time.format("ddd, d")
             color: Colours.palette.m3tertiary
             font.pointSize: Appearance.font.size.normal
+            font.family: Appearance.font.family.mono
             font.weight: 500
             elide: Text.ElideRight
         }
