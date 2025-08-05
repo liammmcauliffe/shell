@@ -9,41 +9,56 @@ Item {
     Process {
         id: getBrightnessProc
         command: ["brightnessctl", "--device=asus::kbd_backlight", "g"]
-        onExited: {
-            console.log("getBrightness exitCode:", exitCode, "stdout:", stdout.trim());
-            if (exitCode === 0) {
-                const currentBrightness = parseInt(stdout.trim(), 10);
-                const newToggled = (currentBrightness > 0);
-                if (root.toggled !== newToggled) {
-                    root.toggled = newToggled;
-                    console.log("Backlight state updated to:", newToggled);
+        
+        stdout: StdioCollector {
+            id: stdoutCollector
+            onStreamFinished: {
+                const output = stdoutCollector.text;
+                console.log("getBrightness stdout:", output ? output.trim() : null);
+                if (output) {
+                    const currentBrightness = parseInt(output.trim(), 10);
+                    const newToggled = (currentBrightness > 0);
+                    if (root.toggled !== newToggled) {
+                        root.toggled = newToggled;
+                        console.log("Backlight state updated to:", newToggled);
+                    }
                 }
-            } else {
-                console.error("Failed to get brightness:", stderr);
+            }
+        }
+
+        stderr: StdioCollector {
+            id: stderrCollector
+            onStreamFinished: {
+                const errorOutput = stderrCollector.text;
+                if (errorOutput) {
+                    console.error("Failed to get brightness:", errorOutput);
+                }
+            }
+        }
+
+        onExited: (exitCode) => {
+            console.log("getBrightness exitCode:", exitCode);
+            if (exitCode !== 0) {
+                console.error("brightnessctl process failed with exit code:", exitCode);
             }
         }
     }
 
     function toggle(value) {
         console.log("Backlight toggle called with value:", value);
-        // Use execDetached for immediate execution
         Quickshell.execDetached([
             "brightnessctl", 
             "--device=asus::kbd_backlight", 
             "s", 
             value ? "3" : "0"
         ]);
-        
-        // Update local state immediately for responsive UI
         root.toggled = value;
-        
-        // Refresh actual state after a short delay
         refreshTimer.start();
     }
 
     function refreshState() {
         console.log("Refreshing backlight state...");
-        getBrightnessProc.start();
+        getBrightnessProc.running = true;
     }
 
     Timer {
