@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import qs.components
 import qs.config
+import qs.services
 
 Item {
     id: root
@@ -12,8 +13,29 @@ Item {
 
     Backlight {
         id: backlight
+        
         onToggledChanged: {
-            backlightButton.isToggled = toggled;
+            console.log("Backlight toggled changed to:", toggled);
+            // Find the backlight button in the Repeater and update its state
+            for (var i = 0; i < buttonGrid.children.length; i++) {
+                if (buttonGrid.children[i].objectName === "backlightButton") {
+                    console.log("Updating button state to:", toggled);
+                    buttonGrid.children[i].isToggled = toggled;
+                    break;
+                }
+            }
+        }
+        
+        Component.onCompleted: {
+            // Ensure initial state is synchronized
+            Qt.callLater(function() {
+                for (var i = 0; i < buttonGrid.children.length; i++) {
+                    if (buttonGrid.children[i].objectName === "backlightButton") {
+                        buttonGrid.children[i].isToggled = toggled;
+                        break;
+                    }
+                }
+            });
         }
     }
 
@@ -45,7 +67,8 @@ Item {
                 ]
 
                 ActionButton {
-                    id: button
+                    // Use objectName to identify the backlight button specifically
+                    objectName: modelData.id === "backlight" ? "backlightButton" : ""
                     width: buttonGrid.buttonSize
                     height: buttonGrid.buttonSize
                     iconName: modelData.icon
@@ -62,3 +85,4 @@ Item {
         }
     }
 }
+

@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import qs.components
 import qs.config
+import qs.services
 
 StyledRect {
     id: button
@@ -203,3 +204,4 @@ StyledRect {
         }
     }
 }
+
