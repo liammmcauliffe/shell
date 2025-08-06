@@ -1,73 +1,109 @@
 import QtQuick 2.15
-import QtQuick.Timers
 import Quickshell
 import Quickshell.Io
 
 Item {
     id: root
     property bool toggled: false
+    property bool manualToggle: false
+
+    // Dedicated process for killing wlsunset
+    Process {
+        id: killProcess
+        command: ["pkill", "-f", "wlsunset"]
+        running: false  // Don't run automatically
+        onExited: {
+            console.log("Kill command completed with exit code:", exitCode);
+            if (typeof root.killCallback === "function") {
+                root.killCallback();
+                root.killCallback = undefined;
+            }
+        }
+    }
 
     Process {
         id: checkNightLightProc
         command: ["pgrep", "-f", "wlsunset"]
+        running: false  // Don't run automatically
         
         stdout: StdioCollector {
             id: stdoutCollector
             onStreamFinished: {
-                const output = stdoutCollector.text;
-                console.log("checkNightLight stdout:", output ? output.trim() : null);
-                if (output) {
-                    const isRunning = output.trim().length > 0;
+                if (!root.manualToggle) {
+                    const output = stdoutCollector.text;
+                    const isRunning = output && output.trim().length > 0;
+                    
                     if (root.toggled !== isRunning) {
                         root.toggled = isRunning;
                         console.log("NightLight state updated to:", isRunning);
-                    }
-                } else {
-                    // wlsunset is not running
-                    if (root.toggled !== false) {
-                        root.toggled = false;
-                        console.log("NightLight state updated to: false (no service running)");
                     }
                 }
             }
         }
 
         stderr: StdioCollector {
-            id: stderrCollector
             onStreamFinished: {
-                const errorOutput = stderrCollector.text;
-                if (errorOutput) {
-                    console.error("Failed to check wlsunset:", errorOutput);
-                }
+                const errorOutput = text;
+                if (errorOutput) console.error("wlsunset check error:", errorOutput);
             }
         }
 
-        onExited: (exitCode) => {
-            console.log("checkNightLight exitCode:", exitCode);
-            if (exitCode !== 0 && exitCode !== 1) {
-                console.error("pgrep process failed with exit code:", exitCode);
-            }
+        onExited: exitCode => {
+            if (exitCode > 1) console.error("pgrep failed, code:", exitCode);
         }
     }
+
+    // Callback storage for kill operation
+    property var killCallback: undefined
 
     function toggle(value) {
         console.log("NightLight toggle called with value:", value);
         
-        if (value) {
-            Quickshell.execDetached([
-                "wlsunset", 
-                "-l", "29.651979", 
-                "-L", "-82.325020", 
-                "-t", "4000", 
-                "-T", "6500"
-            ]);
-        } else {
-            // Kill wlsunset process
-            Quickshell.execDetached(["pkill", "-f", "wlsunset"]);
-        }
+        // Prevent automatic refreshes during operation
+        root.manualToggle = true;
+        refreshTimer.stop();
         
+        // Update UI immediately
         root.toggled = value;
-        refreshTimer.start();
+        
+        if (value) {
+            // Store callback for after kill completes
+            root.killCallback = function() {
+                // Start new process after kill completes
+                Quickshell.execDetached([
+                    "wlsunset", 
+                    "-l", "29.651979", 
+                    "-L", "-82.325020", 
+                    "-t", "4000", 
+                    "-T", "6500"
+                ]);
+                
+                // Verify after delay
+                Qt.callLater(function() {
+                    checkNightLightProc.running = true;
+                    // Re-enable checks after longer delay
+                    Qt.callLater(function() {
+                        refreshTimer.restart();
+                        root.manualToggle = false;
+                    }, 1000);
+                }, 300);
+            };
+            
+            // Start kill process by setting running to true
+            killProcess.running = true;
+        } else {
+            // Store callback for after kill completes
+            root.killCallback = function() {
+                // Re-enable state checks after delay
+                Qt.callLater(function() {
+                    refreshTimer.restart();
+                    root.manualToggle = false;
+                }, 500);
+            };
+            
+            // Start kill process by setting running to true
+            killProcess.running = true;
+        }
     }
 
     function refreshState() {
@@ -77,12 +113,16 @@ Item {
 
     Timer {
         id: refreshTimer
-        interval: 500
+        interval: 3000  // 3 second refresh interval
+        running: false  // Don't run automatically
         onTriggered: refreshState()
     }
 
     Component.onCompleted: {
         console.log("NightLight component initialized");
-        refreshState();
+        // Initial check with delay to avoid startup race conditions
+        Qt.callLater(function() {
+            checkNightLightProc.running = true;
+        }, 1000);
     }
-} 
+}
