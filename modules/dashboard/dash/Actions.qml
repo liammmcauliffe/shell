@@ -131,6 +131,36 @@ Item {
         }
     }
 
+    Cloudflare {
+        id: cloudflare
+        
+        onToggledChanged: {
+            // Find the cloudflare button in the Repeater and update its state
+            for (var i = 0; i < buttonGrid.children.length; i++) {
+                if (buttonGrid.children[i].objectName === "cloudflareButton") {
+                    buttonGrid.children[i].isUpdating = true
+                    buttonGrid.children[i].isToggled = toggled;
+                    Qt.callLater(function() {
+                        buttonGrid.children[i].isUpdating = false
+                    })
+                    break;
+                }
+            }
+        }
+        
+        Component.onCompleted: {
+            // Ensure initial state is synchronized
+            Qt.callLater(function() {
+                for (var i = 0; i < buttonGrid.children.length; i++) {
+                    if (buttonGrid.children[i].objectName === "cloudflareButton") {
+                        buttonGrid.children[i].isToggled = toggled;
+                        break;
+                    }
+                }
+            });
+        }
+    }
+
     StyledRect {
         anchors.fill: parent
         color: "transparent"
@@ -150,7 +180,7 @@ Item {
 
             Repeater {
                 model: [
-                    { id: "cloudflare", icon: "dns", label: "Cloudflare DNS", color: Colours.palette.m3primary },
+                    { id: "cloudflare", icon: "dns", label: "Cloudflare WARP", color: Colours.palette.m3primary },
                     { id: "backlight", icon: "brightness_6", label: "Backlight", color: Colours.palette.m3secondary },
                     { id: "keepAwake", icon: "bedtime_off", label: "Keep Awake", color: Colours.palette.m3tertiary },
                     { id: "gameMode", icon: "sports_esports", label: "Game Mode", color: Colours.palette.m3primary },
@@ -163,7 +193,8 @@ Item {
                     objectName: modelData.id === "backlight" ? "backlightButton" : 
                                modelData.id === "nightLight" ? "nightLightButton" : 
                                modelData.id === "gameMode" ? "gameModeButton" : 
-                               modelData.id === "keepAwake" ? "keepAwakeButton" : ""
+                               modelData.id === "keepAwake" ? "keepAwakeButton" : 
+                               modelData.id === "cloudflare" ? "cloudflareButton" : ""
                     width: buttonGrid.buttonSize
                     height: buttonGrid.buttonSize
                     iconName: modelData.icon
@@ -181,6 +212,8 @@ Item {
                                 gameMode.toggle(isToggled);
                             } else if (modelData.id === "keepAwake") {
                                 keepAwake.toggle();
+                            } else if (modelData.id === "cloudflare") {
+                                cloudflare.toggle(isToggled);
                             }
                             Qt.callLater(function() {
                                 isUpdating = false
