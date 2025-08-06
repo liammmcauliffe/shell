@@ -161,6 +161,36 @@ Item {
         }
     }
 
+    SilenceNotifications {
+        id: silenceNotifications
+        
+        onToggledChanged: {
+            // Find the silence notifications button in the Repeater and update its state
+            for (var i = 0; i < buttonGrid.children.length; i++) {
+                if (buttonGrid.children[i].objectName === "silenceNotificationsButton") {
+                    buttonGrid.children[i].isUpdating = true
+                    buttonGrid.children[i].isToggled = toggled;
+                    Qt.callLater(function() {
+                        buttonGrid.children[i].isUpdating = false
+                    })
+                    break;
+                }
+            }
+        }
+        
+        Component.onCompleted: {
+            // Ensure initial state is synchronized
+            Qt.callLater(function() {
+                for (var i = 0; i < buttonGrid.children.length; i++) {
+                    if (buttonGrid.children[i].objectName === "silenceNotificationsButton") {
+                        buttonGrid.children[i].isToggled = toggled;
+                        break;
+                    }
+                }
+            });
+        }
+    }
+
     StyledRect {
         anchors.fill: parent
         color: "transparent"
@@ -194,7 +224,8 @@ Item {
                                modelData.id === "nightLight" ? "nightLightButton" : 
                                modelData.id === "gameMode" ? "gameModeButton" : 
                                modelData.id === "keepAwake" ? "keepAwakeButton" : 
-                               modelData.id === "cloudflare" ? "cloudflareButton" : ""
+                               modelData.id === "cloudflare" ? "cloudflareButton" : 
+                               modelData.id === "silenceNotifications" ? "silenceNotificationsButton" : ""
                     width: buttonGrid.buttonSize
                     height: buttonGrid.buttonSize
                     iconName: modelData.icon
@@ -214,6 +245,8 @@ Item {
                                 keepAwake.toggle();
                             } else if (modelData.id === "cloudflare") {
                                 cloudflare.toggle(isToggled);
+                            } else if (modelData.id === "silenceNotifications") {
+                                silenceNotifications.toggle(isToggled);
                             }
                             Qt.callLater(function() {
                                 isUpdating = false

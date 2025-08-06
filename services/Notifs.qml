@@ -13,6 +13,9 @@ Singleton {
 
     readonly property list<Notif> list: []
     readonly property list<Notif> popups: list.filter(n => n.popup)
+    
+    // Silent mode property
+    property bool silent: false
 
     NotificationServer {
         id: server
@@ -28,7 +31,7 @@ Singleton {
             notif.tracked = true;
 
             root.list.push(notifComp.createObject(root, {
-                popup: true,
+                popup: !root.silent, // Only show popup if not in silent mode
                 notification: notif
             }));
         }
