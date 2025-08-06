@@ -7,7 +7,10 @@ import qs.services
 StyledRect {
     id: button
 
+    signal clicked()
+
     property bool isToggled: false
+    property bool isUpdating: false
     property string tooltipText: ""
     property color defaultColor: Colours.palette.m3surfaceContainerHigh
     property color toggledColor: Colours.palette.m3primary

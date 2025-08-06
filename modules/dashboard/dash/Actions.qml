@@ -15,12 +15,14 @@ Item {
         id: backlight
         
         onToggledChanged: {
-            console.log("Backlight toggled changed to:", toggled);
             // Find the backlight button in the Repeater and update its state
             for (var i = 0; i < buttonGrid.children.length; i++) {
                 if (buttonGrid.children[i].objectName === "backlightButton") {
-                    console.log("Updating button state to:", toggled);
+                    buttonGrid.children[i].isUpdating = true
                     buttonGrid.children[i].isToggled = toggled;
+                    Qt.callLater(function() {
+                        buttonGrid.children[i].isUpdating = false
+                    })
                     break;
                 }
             }
@@ -43,12 +45,14 @@ Item {
         id: nightLight
         
         onToggledChanged: {
-            console.log("NightLight toggled changed to:", toggled);
             // Find the night light button in the Repeater and update its state
             for (var i = 0; i < buttonGrid.children.length; i++) {
                 if (buttonGrid.children[i].objectName === "nightLightButton") {
-                    console.log("Updating night light button state to:", toggled);
+                    buttonGrid.children[i].isUpdating = true
                     buttonGrid.children[i].isToggled = toggled;
+                    Qt.callLater(function() {
+                        buttonGrid.children[i].isUpdating = false
+                    })
                     break;
                 }
             }
@@ -59,6 +63,66 @@ Item {
             Qt.callLater(function() {
                 for (var i = 0; i < buttonGrid.children.length; i++) {
                     if (buttonGrid.children[i].objectName === "nightLightButton") {
+                        buttonGrid.children[i].isToggled = toggled;
+                        break;
+                    }
+                }
+            });
+        }
+    }
+
+    GameMode {
+        id: gameMode
+        
+        onToggledChanged: {
+            // Find the game mode button in the Repeater and update its state
+            for (var i = 0; i < buttonGrid.children.length; i++) {
+                if (buttonGrid.children[i].objectName === "gameModeButton") {
+                    buttonGrid.children[i].isUpdating = true
+                    buttonGrid.children[i].isToggled = toggled;
+                    Qt.callLater(function() {
+                        buttonGrid.children[i].isUpdating = false
+                    })
+                    break;
+                }
+            }
+        }
+        
+        Component.onCompleted: {
+            // Ensure initial state is synchronized
+            Qt.callLater(function() {
+                for (var i = 0; i < buttonGrid.children.length; i++) {
+                    if (buttonGrid.children[i].objectName === "gameModeButton") {
+                        buttonGrid.children[i].isToggled = toggled;
+                        break;
+                    }
+                }
+            });
+        }
+    }
+
+    KeepAwake {
+        id: keepAwake
+        
+        onToggledChanged: {
+            // Find the keep awake button in the Repeater and update its state
+            for (var i = 0; i < buttonGrid.children.length; i++) {
+                if (buttonGrid.children[i].objectName === "keepAwakeButton") {
+                    buttonGrid.children[i].isUpdating = true
+                    buttonGrid.children[i].isToggled = toggled;
+                    Qt.callLater(function() {
+                        buttonGrid.children[i].isUpdating = false
+                    })
+                    break;
+                }
+            }
+        }
+        
+        Component.onCompleted: {
+            // Ensure initial state is synchronized
+            Qt.callLater(function() {
+                for (var i = 0; i < buttonGrid.children.length; i++) {
+                    if (buttonGrid.children[i].objectName === "keepAwakeButton") {
                         buttonGrid.children[i].isToggled = toggled;
                         break;
                     }
@@ -97,7 +161,9 @@ Item {
                 ActionButton {
                     // Use objectName to identify specific buttons
                     objectName: modelData.id === "backlight" ? "backlightButton" : 
-                               modelData.id === "nightLight" ? "nightLightButton" : ""
+                               modelData.id === "nightLight" ? "nightLightButton" : 
+                               modelData.id === "gameMode" ? "gameModeButton" : 
+                               modelData.id === "keepAwake" ? "keepAwakeButton" : ""
                     width: buttonGrid.buttonSize
                     height: buttonGrid.buttonSize
                     iconName: modelData.icon
@@ -105,10 +171,20 @@ Item {
                     toggledColor: modelData.color
 
                     onIsToggledChanged: {
-                        if (modelData.id === "backlight") {
-                            backlight.toggle(isToggled);
-                        } else if (modelData.id === "nightLight") {
-                            nightLight.toggle(isToggled);
+                        if (!isUpdating) {
+                            isUpdating = true
+                            if (modelData.id === "backlight") {
+                                backlight.toggle(isToggled);
+                            } else if (modelData.id === "nightLight") {
+                                nightLight.toggle(isToggled);
+                            } else if (modelData.id === "gameMode") {
+                                gameMode.toggle(isToggled);
+                            } else if (modelData.id === "keepAwake") {
+                                keepAwake.toggle();
+                            }
+                            Qt.callLater(function() {
+                                isUpdating = false
+                            })
                         }
                     }
                 }
