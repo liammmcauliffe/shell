@@ -39,6 +39,34 @@ Item {
         }
     }
 
+    NightLight {
+        id: nightLight
+        
+        onToggledChanged: {
+            console.log("NightLight toggled changed to:", toggled);
+            // Find the night light button in the Repeater and update its state
+            for (var i = 0; i < buttonGrid.children.length; i++) {
+                if (buttonGrid.children[i].objectName === "nightLightButton") {
+                    console.log("Updating night light button state to:", toggled);
+                    buttonGrid.children[i].isToggled = toggled;
+                    break;
+                }
+            }
+        }
+        
+        Component.onCompleted: {
+            // Ensure initial state is synchronized
+            Qt.callLater(function() {
+                for (var i = 0; i < buttonGrid.children.length; i++) {
+                    if (buttonGrid.children[i].objectName === "nightLightButton") {
+                        buttonGrid.children[i].isToggled = toggled;
+                        break;
+                    }
+                }
+            });
+        }
+    }
+
     StyledRect {
         anchors.fill: parent
         color: "transparent"
@@ -61,14 +89,15 @@ Item {
                     { id: "cloudflare", icon: "dns", label: "Cloudflare DNS", color: Colours.palette.m3primary },
                     { id: "backlight", icon: "brightness_6", label: "Backlight", color: Colours.palette.m3secondary },
                     { id: "keepAwake", icon: "bedtime_off", label: "Keep Awake", color: Colours.palette.m3tertiary },
-                    { id: "gameMode", icon: "sports_esports", label: "Game Mode", color: Colours.palette.m3error },
-                    { id: "gammaStep", icon: "visibility", label: "Gamma Step", color: Colours.palette.m3primary },
+                    { id: "gameMode", icon: "sports_esports", label: "Game Mode", color: Colours.palette.m3primary },
+                    { id: "nightLight", icon: "nightlight", label: "Night Light", color: Colours.palette.m3error },
                     { id: "silenceNotifications", icon: "notifications_off", label: "Silence Notifications", color: Colours.palette.m3secondary }
                 ]
 
                 ActionButton {
-                    // Use objectName to identify the backlight button specifically
-                    objectName: modelData.id === "backlight" ? "backlightButton" : ""
+                    // Use objectName to identify specific buttons
+                    objectName: modelData.id === "backlight" ? "backlightButton" : 
+                               modelData.id === "nightLight" ? "nightLightButton" : ""
                     width: buttonGrid.buttonSize
                     height: buttonGrid.buttonSize
                     iconName: modelData.icon
@@ -78,6 +107,8 @@ Item {
                     onIsToggledChanged: {
                         if (modelData.id === "backlight") {
                             backlight.toggle(isToggled);
+                        } else if (modelData.id === "nightLight") {
+                            nightLight.toggle(isToggled);
                         }
                     }
                 }

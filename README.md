@@ -281,6 +281,27 @@ caelestia wallpaper -f <path/to/file>
 caelestia scheme set -n dynamic
 ```
 
+### How do I configure the night light location?
+
+The night light feature uses your location to calculate sunrise/sunset times. To configure your location:
+
+1. Copy the example config file:
+   ```sh
+   cp modules/dashboard/dash/nightlight_config.json.example modules/dashboard/dash/nightlight_config.json
+   ```
+
+2. Edit the coordinates in `modules/dashboard/dash/nightlight_config.json`:
+   ```json
+   {
+       "latitude": 29.651979,
+       "longitude": -82.325020,
+       "night_temp": 4000,
+       "day_temp": 6500
+   }
+   ```
+
+The config file is gitignored to protect your privacy. You can find your coordinates using online tools like Google Maps.
+
 ### My wallpapers aren't showing up in the launcher!
 
 The launcher pulls wallpapers from `~/Pictures/Wallpapers` by default. You can change this in the config. Additionally,
