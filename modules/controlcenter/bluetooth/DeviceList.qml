@@ -296,7 +296,7 @@ ColumnLayout {
         function onClicked(): void {
         }
 
-        Layout.preferredWidth: implicitWidth + (toggleStateLayer.pressed ? Appearance.padding.larger * 2 : toggled ? Appearance.padding.small * 2 : 0)
+        Layout.preferredWidth: implicitWidth + (toggleStateLayer.pressed ? Appearance.padding.normal * 2 : toggled ? Appearance.padding.small * 2 : 0)
         implicitWidth: toggleBtnInner.implicitWidth + Appearance.padding.large * 2
         implicitHeight: toggleBtnIcon.implicitHeight + Appearance.padding.normal * 2
 
@@ -346,7 +346,10 @@ ColumnLayout {
         }
 
         Behavior on radius {
-            Anim {}
+            Anim {
+                duration: Appearance.anim.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.anim.curves.expressiveFastSpatial
+            }
         }
 
         Behavior on Layout.preferredWidth {
