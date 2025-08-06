@@ -37,7 +37,7 @@ def handle_registry_global(
 
     if iface_name == "wl_compositor":
         compositor = wl_registry.bind(id_num, WlCompositor, version)
-        global_registry.surface = compositor.create_surface()  # type: ignore
+        global_registry.surface = compositor.create_surface()
     elif iface_name == "zwp_idle_inhibit_manager_v1":
         global_registry.inhibit_manager = wl_registry.bind(
             id_num, ZwpIdleInhibitManagerV1, version
@@ -45,10 +45,8 @@ def handle_registry_global(
 
 
 def main() -> None:
-    # Check if we're in a wayland session
     if not os.environ.get('WAYLAND_DISPLAY') and not os.environ.get('XDG_SESSION_TYPE') == 'wayland':
         print("Error: Not running in a Wayland session")
-        print("This script requires a Wayland session to work")
         sys.exit(1)
 
     done = Event()
@@ -65,7 +63,7 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        registry = display.get_registry()  # type: ignore
+        registry = display.get_registry()
         registry.user_data = global_registry
         registry.dispatcher["global"] = handle_registry_global
     except Exception as e:
@@ -78,8 +76,8 @@ def main() -> None:
             display.dispatch()
             display.roundtrip()
             display.disconnect()
-        except Exception as e:
-            print(f"Warning: Error during shutdown: {e}")
+        except Exception:
+            pass
 
     try:
         display.dispatch()
@@ -91,12 +89,11 @@ def main() -> None:
 
     if global_registry.surface is None or global_registry.inhibit_manager is None:
         print("Error: Wayland compositor does not support idle_inhibit_unstable_v1 protocol")
-        print("This feature requires a Wayland compositor that supports idle inhibition")
         shutdown()
         sys.exit(1)
 
     try:
-        inhibitor = global_registry.inhibit_manager.create_inhibitor(  # type: ignore
+        inhibitor = global_registry.inhibit_manager.create_inhibitor(
             global_registry.surface
         )
     except Exception as e:
@@ -113,14 +110,12 @@ def main() -> None:
         shutdown()
         sys.exit(1)
 
-    print("Inhibiting idle...")
     done.wait()
-    print("Shutting down...")
 
     try:
         inhibitor.destroy()
-    except Exception as e:
-        print(f"Warning: Error destroying inhibitor: {e}")
+    except Exception:
+        pass
 
     shutdown()
 

@@ -9,35 +9,26 @@ Item {
     property bool manualToggle: false
 
     function toggle() {
-        console.log("KeepAwake toggle called, current state:", toggled);
-        
-        // Prevent automatic refreshes during operation
         root.manualToggle = true;
         refreshTimer.stop();
         
         if (toggled) {
-            // Turn off keep awake
             root.toggled = false;
             Quickshell.execDetached(["pkill", "-f", "wayland-idle-inhibitor.py"]);
             
-            // Verify after delay
             Qt.callLater(function() {
                 checkActiveStateProc.running = true;
-                // Re-enable checks after longer delay
                 Qt.callLater(function() {
                     refreshTimer.restart();
                     root.manualToggle = false;
                 }, 1000);
             }, 300);
         } else {
-            // Turn on keep awake
             root.toggled = true;
             Quickshell.execDetached(["/home/liam/.config/quickshell/caelestia/utils/scripts/wayland-idle-inhibitor.py"]);
             
-            // Verify after delay
             Qt.callLater(function() {
                 checkActiveStateProc.running = true;
-                // Re-enable checks after longer delay
                 Qt.callLater(function() {
                     refreshTimer.restart();
                     root.manualToggle = false;
@@ -47,11 +38,9 @@ Item {
     }
 
     function refreshState() {
-        console.log("Refreshing keep awake state...");
         checkActiveStateProc.running = true;
     }
 
-    // Process to check if wayland-idle-inhibitor is running
     Process {
         id: checkActiveStateProc
         command: ["pgrep", "-f", "wayland-idle-inhibitor.py"]
@@ -66,7 +55,6 @@ Item {
                     
                     if (root.toggled !== isRunning) {
                         root.toggled = isRunning;
-                        console.log("KeepAwake state updated to:", isRunning);
                     }
                 }
             }
@@ -86,13 +74,12 @@ Item {
 
     Timer {
         id: refreshTimer
-        interval: 3000  // 3 second refresh interval
-        running: false  // Don't run automatically
+        interval: 3000
+        running: false
         onTriggered: refreshState()
     }
 
     Component.onCompleted: {
-        // Initial check with delay
         Qt.callLater(function() {
             refreshState();
             refreshTimer.restart();
