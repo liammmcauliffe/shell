@@ -101,6 +101,10 @@ Item {
         sourceComponent: ControlCenter {
             screen: root.screen
             active: root.queuedMode
+
+            function close(): void {
+                root.close();
+            }
         }
     }
 

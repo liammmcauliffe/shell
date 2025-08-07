@@ -4,8 +4,11 @@ import QtQuick
 QtObject {
     readonly property list<string> panes: ["network", "bluetooth", "audio"]
 
-    property string active
-    property int activeIndex
+    required property var root
+    property bool floating: false
+    property string active: panes[0]
+    property int activeIndex: 0
+    property bool navExpanded: false
 
     readonly property Bt bt: Bt {}
 

@@ -14,8 +14,6 @@ ClippingRectangle {
 
     required property Session session
 
-    topRightRadius: Appearance.rounding.normal
-    bottomRightRadius: Appearance.rounding.normal
     color: "transparent"
 
     ColumnLayout {

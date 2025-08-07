@@ -36,7 +36,7 @@ RadioButton {
             implicitHeight: 8
 
             radius: Appearance.rounding.full
-            color: root.checked ? Colours.palette.m3primary : "transparent"
+            color: Qt.alpha(Colours.palette.m3primary, root.checked ? 1 : 0)
         }
 
         Behavior on border.color {

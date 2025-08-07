@@ -124,7 +124,7 @@ Item {
             implicitHeight: nonAnimHeight
 
             radius: Appearance.rounding.normal
-            color: GridView.isCurrentItem ? Colours.palette.m3surfaceContainerHighest : "transparent"
+            color: Qt.alpha(Colours.palette.m3surfaceContainerHighest, GridView.isCurrentItem ? 1 : 0)
             z: GridView.isCurrentItem || implicitHeight !== nonAnimHeight ? 1 : 0
             clip: true
 

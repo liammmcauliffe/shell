@@ -266,7 +266,7 @@ Item {
                             implicitHeight: editIcon.implicitHeight + Appearance.padding.smaller * 2
 
                             radius: root.session.bt.editingDeviceName ? Appearance.rounding.small : implicitHeight / 2
-                            color: root.session.bt.editingDeviceName ? Colours.palette.m3primary : "transparent"
+                            color: Qt.alpha(Colours.palette.m3primary, root.session.bt.editingDeviceName ? 1 : 0)
 
                             StateLayer {
                                 color: root.session.bt.editingDeviceName ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
