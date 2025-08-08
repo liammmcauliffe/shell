@@ -50,7 +50,7 @@ RowLayout {
         ClippingWrapperRectangle {
             anchors.fill: parent
 
-            color: Colours.palette.m3surfaceContainerHigh
+            color: Colours.tPalette.m3surfaceContainerHigh
             radius: Appearance.rounding.small
             rotation: 9
 
@@ -94,7 +94,7 @@ RowLayout {
         StyledClippingRect {
             anchors.fill: parent
 
-            color: Colours.palette.m3surfaceContainerHigh
+            color: Colours.tPalette.m3surfaceContainerHigh
             radius: Appearance.rounding.small
 
             border.width: Config.lock.sizes.mediaCoverBorder
