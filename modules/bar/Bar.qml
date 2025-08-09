@@ -71,7 +71,7 @@ Item {
     anchors.bottom: parent.bottom
     anchors.left: parent.left
 
-    implicitWidth: child.implicitWidth + Config.border.thickness * 2
+    implicitWidth: child.implicitWidth + Math.max(Appearance.padding.smaller, Config.border.thickness) * 2
 
     Item {
         id: child
