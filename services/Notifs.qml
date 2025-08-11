@@ -13,9 +13,14 @@ Singleton {
 
     readonly property list<Notif> list: []
     readonly property list<Notif> popups: list.filter(n => n.popup)
-    
-    // Silent mode property
+
+    // Silent mode property (dnd mirrors silent)
     property bool silent: false
+    readonly property bool dnd: silent
+
+    function toggleDnd(): void {
+        silent = !silent;
+    }
 
     NotificationServer {
         id: server
