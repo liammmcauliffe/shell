@@ -35,6 +35,11 @@ Item {
             name: "battery",
             item: batteryIcon,
             enabled: Config.bar.status.showBattery
+        },
+        {
+            name: "notifications",
+            item: notificationIcon,
+            enabled: Config.bar.status.showNotifications
         }
     ]
 
@@ -77,6 +82,21 @@ Item {
                 text: Hyprland.kbLayout
                 color: root.colour
                 font.family: Appearance.font.family.mono
+            }
+        }
+
+        // Notification icon
+        Loader {
+            id: notificationIcon
+
+            asynchronous: true
+            active: Config.bar.status.showNotifications
+            visible: active
+
+            sourceComponent: MaterialIcon {
+                animate: true
+                text: Notifs.dnd ? "notifications_off" : "notifications"
+                color: root.colour
             }
         }
 
