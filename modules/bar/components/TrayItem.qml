@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import qs.components.effects
 import qs.services
 import qs.config
+import qs.utils
 import Quickshell.Services.SystemTray
 import QtQuick
 
