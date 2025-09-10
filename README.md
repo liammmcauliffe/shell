@@ -16,7 +16,7 @@
 > **Repository**: [liammmcauliffe/shell](https://github.com/liammmcauliffe/shell)  
 > **Original Project**: [caelestia-dots/shell](https://github.com/caelestia-dots/shell)
 
-https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
+
 
 ## Components
 
@@ -591,7 +591,7 @@ default, you must create it manually.
   },
   "paths": {
     "mediaGif": "root:/assets/bongocat.gif",
-    "sessionGif": "root:/assets/kurukuru.gif",
+    "sessionGif": "root:/assets/globe.gif",
     "wallpaperDir": "~/Pictures/Wallpapers"
   },
   "services": {
