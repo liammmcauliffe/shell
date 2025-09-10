@@ -3,10 +3,13 @@ import Quickshell.Io
 JsonObject {
     property bool expire: true
     property int defaultExpireTimeout: 5000
+    property bool timeoutBar: true
+    property bool timeoutCircle: false
     property real clearThreshold: 0.3
     property int expandThreshold: 20
-    property bool actionOnClick: false
+    property bool actionOnClick: true
     property int groupPreviewNum: 3
+    property bool showPendingCount: true
     property Sizes sizes: Sizes {}
 
     component Sizes: JsonObject {

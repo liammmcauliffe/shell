@@ -123,8 +123,7 @@ CustomMouseArea {
 
         // Show launcher on hover, or show/hide on drag if hover is disabled
         if (Config.launcher.showOnHover) {
-            if (!visibilities.launcher && inBottomPanel(panels.launcher, x, y))
-                visibilities.launcher = true;
+            visibilities.launcher = inBottomPanel(panels.launcher, x, y);
         } else if (pressed && inBottomPanel(panels.launcher, dragStart.x, dragStart.y) && withinPanelWidth(panels.launcher, x, y)) {
             const dragY = y - dragStart.y;
             if (dragY < -Config.launcher.dragThreshold)

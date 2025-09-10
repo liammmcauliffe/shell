@@ -63,6 +63,13 @@ Item {
             source: "LockStatus.qml"
         }
 
+        Popout {
+            name: "calendar"
+            sourceComponent: Calendar {
+                wrapper: root.wrapper
+            }
+        }
+
         Repeater {
             model: ScriptModel {
                 values: [...SystemTray.items.values]

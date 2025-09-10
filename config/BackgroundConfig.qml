@@ -6,7 +6,7 @@ JsonObject {
     property Visualiser visualiser: Visualiser {}
 
     component DesktopClock: JsonObject {
-        property bool enabled: false
+        property bool enabled: true
     }
 
     component Visualiser: JsonObject {

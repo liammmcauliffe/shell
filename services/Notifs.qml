@@ -27,10 +27,16 @@ Singleton {
         onNotification: notif => {
             notif.tracked = true;
 
-            root.list.push(notifComp.createObject(root, {
-                popup: true,
-                notification: notif
-            }));
+            // Check if Do Not Disturb is enabled
+            if (DoNotDisturb.enabled) {
+                // Add to pending list instead of showing as popup
+                DoNotDisturb.pending.push(notif);
+            } else {
+                root.list.push(notifComp.createObject(root, {
+                    popup: true,
+                    notification: notif
+                }));
+            }
         }
     }
 

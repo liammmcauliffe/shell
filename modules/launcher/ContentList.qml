@@ -77,10 +77,21 @@ Item {
         id: appList
 
         active: false
-        asynchronous: true
+        asynchronous: false
 
         anchors.left: parent.left
         anchors.right: parent.right
+
+        Connections {
+            target: root.visibilities
+            function onLauncherChanged() {
+                if (root.visibilities.launcher && appList.item) {
+                    if (appList.item.state === "apps") {
+                        appList.item.state = appList.item.state;
+                    }
+                }
+            }
+        }
 
         sourceComponent: AppList {
             search: root.search
@@ -92,7 +103,7 @@ Item {
         id: wallpaperList
 
         active: false
-        asynchronous: true
+        asynchronous: false
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom

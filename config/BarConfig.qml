@@ -14,7 +14,7 @@ JsonObject {
     property list<var> entries: [
         {
             id: "logo",
-            enabled: true
+            enabled: false
         },
         {
             id: "workspaces",
@@ -63,21 +63,20 @@ JsonObject {
     component Workspaces: JsonObject {
         property int shown: 5
         property bool activeIndicator: true
-        property bool occupiedBg: false
+        property bool occupiedBg: true
         property bool showWindows: true
         property bool showWindowsOnSpecialWorkspaces: showWindows
-        property bool activeTrail: false
+        property bool activeTrail: true
         property bool perMonitorWorkspaces: true
-        property string label: "  " // if empty, will show workspace name's first letter
-        property string occupiedLabel: "󰮯"
-        property string activeLabel: "󰮯"
+        property string label: "   " // if empty, will show workspace name's first letter
+        property string occupiedLabel: "   "
+        property string activeLabel: "   "
         property string capitalisation: "preserve" // upper, lower, or preserve - relevant only if label is empty
     }
 
     component Tray: JsonObject {
         property bool background: false
         property bool recolour: false
-        property list<var> iconSubs: []
     }
 
     component Status: JsonObject {
@@ -100,5 +99,6 @@ JsonObject {
         property int trayMenuWidth: 300
         property int batteryWidth: 250
         property int networkWidth: 320
+        property int calendarWidth: 350
     }
 }
