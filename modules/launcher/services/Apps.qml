@@ -76,20 +76,20 @@ Searcher {
     }
 
     // Variants {
-    //     id: variants
+    // id: variants
 
-    //     model: [...DesktopEntries.applications.values].filter(a => !Config.launcher.hiddenApps.includes(a.id)).sort((a, b) => a.name.localeCompare(b.name))
+    // model: [...DesktopEntries.applications.values].filter(a => !Config.launcher.hiddenApps.includes(a.id)).sort((a, b) => a.name.localeCompare(b.name))
 
-    //     QtObject {
-    //         required property DesktopEntry modelData
-    //         readonly property string id: modelData.id
-    //         readonly property string name: modelData.name
-    //         readonly property string desc: modelData.comment
-    //         readonly property string execString: modelData.execString
-    //         readonly property string wmClass: modelData.startupClass
-    //         readonly property string genericName: modelData.genericName
-    //         readonly property string categories: modelData.categories.join(" ")
-    //         readonly property string keywords: modelData.keywords.join(" ")
-    //     }
+    // QtObject {
+    // required property DesktopEntry modelData
+    // readonly property string id: modelData.id
+    // readonly property string name: modelData.name
+    // readonly property string desc: modelData.comment
+    // readonly property string execString: modelData.execString
+    // readonly property string wmClass: modelData.startupClass
+    // readonly property string genericName: modelData.genericName
+    // readonly property string categories: modelData.categories.join(" ")
+    // readonly property string keywords: modelData.keywords.join(" ")
+    // }
     // }
 }

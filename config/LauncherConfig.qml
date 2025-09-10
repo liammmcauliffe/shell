@@ -10,7 +10,7 @@ JsonObject {
     property bool enableDangerousActions: true // Allow actions that can cause losing data, like shutdown, reboot and logout
     property int dragThreshold: 50
     property bool vimKeybinds: false
-    property list<string> hiddenApps: []
+    property list<string> hiddenApps: ["xfce4-about.desktop", "avahi-discover.desktop", "electron37.desktop", "footclient.desktop", "foot-server.desktop", "gammastep.desktop", "gammastep-indicator.desktop", "org.gnupg.pinentry-qt5.desktop", "org.gnupg.pinentry-qt.desktop", "qt6ct.desktop", "stoken-gui.desktop", "stoken-gui-small.desktop", "thunar-bulk-rename.desktop", "thunar-settings.desktop", "cmake-gui.desktop", "uxterm.desktop"]
     property UseFuzzy useFuzzy: UseFuzzy {}
     property Sizes sizes: Sizes {}
 
