@@ -1,21 +1,63 @@
-<h1 align=center>caelestia-shell</h1>
+<h1 align=center>caelestia-shell (Personal Fork)</h1>
 
 <div align=center>
 
-![GitHub last commit](https://img.shields.io/github/last-commit/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=9ccbfb)
-![GitHub Repo stars](https://img.shields.io/github/stars/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=b9c8da)
-![GitHub repo size](https://img.shields.io/github/repo-size/caelestia-dots/shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
-[![Ko-Fi donate](https://img.shields.io/badge/donate-kofi?style=for-the-badge&logo=ko-fi&logoColor=ffffff&label=ko-fi&labelColor=101418&color=f16061&link=https%3A%2F%2Fko-fi.com%2Fsoramane)](https://ko-fi.com/soramane)
+![GitHub last commit](https://img.shields.io/github/last-commit/liammmcauliffe/shell?style=for-the-badge&labelColor=101418&color=9ccbfb)
+![GitHub Repo stars](https://img.shields.io/github/stars/liammmcauliffe/shell?style=for-the-badge&labelColor=101418&color=b9c8da)
+![GitHub repo size](https://img.shields.io/github/repo-size/liammmcauliffe/shell?style=for-the-badge&labelColor=101418&color=d3bfe6)
+[![Fork of caelestia-shell](https://img.shields.io/badge/fork%20of-caelestia--shell-blue?style=for-the-badge&labelColor=101418&color=9ccbfb)](https://github.com/caelestia-dots/shell)
 
 </div>
+
+> **⚠️ This is a personal fork of [caelestia-shell](https://github.com/caelestia-dots/shell) with custom modifications and additional features.**
+> 
+> This fork contains personal customizations, additional services, and enhanced functionality beyond the original caelestia-shell. While based on the excellent work of the original project, this version includes modifications tailored to my specific needs and preferences.
+> 
+> **Repository**: [liammmcauliffe/shell](https://github.com/liammmcauliffe/shell)  
+> **Original Project**: [caelestia-dots/shell](https://github.com/caelestia-dots/shell)
 
 https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 ## Components
 
--   Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)
--   Window manager: [`Hyprland`](https://hyprland.org)
--   Dots: [`caelestia`](https://github.com/caelestia-dots)
+- Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)
+- Window manager: [`Hyprland`](https://hyprland.org)
+- Dots: [`caelestia`](https://github.com/caelestia-dots)
+- **Fork of**: [`caelestia-shell`](https://github.com/caelestia-dots/shell)
+
+## Custom Features & Modifications
+
+This personal fork includes several additional features and modifications beyond the original caelestia-shell:
+
+### 🆕 Additional Services
+- **Do Not Disturb**: Toggle notification blocking with pending notification management
+- **Game Mode**: Performance optimization mode that disables animations and effects
+- **Keyboard Backlight**: Control keyboard backlight brightness (supports brightnessctl, sysfs, and ddcutil)
+- **Night Mode**: Blue light filter using hyprsunset
+- **VPN**: Cloudflare WARP integration with connection management
+- **Cava Integration**: Enhanced audio visualizer with custom C++ backend
+
+### 🎨 Enhanced UI Components
+- **Notifications Popout**: Improved notification management with Do Not Disturb integration
+- **Additional Assets**: Custom globe.gif and dino.png assets
+- **Enhanced Visualizer**: Better audio visualization with Cava backend
+
+### 🔧 Technical Improvements
+- **Custom C++ Plugin**: Native Cava integration for better audio processing
+- **Enhanced IPC**: Additional IPC commands for new services
+- **Better Error Handling**: Improved service availability detection
+- **Performance Optimizations**: Game mode and other performance enhancements
+- **BeatTracker Integration**: Enhanced audio beat detection capabilities
+- **Threaded Render Loop**: Improved performance with forced threaded rendering
+- **Updated Dependencies**: Regular updates to stay current with upstream changes
+
+### 📝 Recent Updates
+Based on the latest commits, this fork includes:
+- **Launcher Configuration**: Enhanced launcher with config options for hiding applications
+- **Asset Management**: Restored personal configurations and customizations
+- **Plugin Updates**: Added BeatTracker and removed multimedia dependencies
+- **Code Quality**: Internal formatting improvements and better C++ code structure
+- **Development Tools**: Added .envrc for development environment setup
 
 ## Installation
 
@@ -73,45 +115,64 @@ For home-manager, you can also use the Caelestia's home manager module (explaine
 
 Dependencies:
 
--   [`caelestia-cli`](https://github.com/caelestia-dots/cli)
--   [`quickshell-git`](https://quickshell.outfoxxed.me) - this has to be the git version, not the latest tagged version
--   [`ddcutil`](https://github.com/rockowitz/ddcutil)
--   [`brightnessctl`](https://github.com/Hummer12007/brightnessctl)
--   [`app2unit`](https://github.com/Vladimir-csp/app2unit)
--   [`cava`](https://github.com/karlstav/cava)
--   [`networkmanager`](https://networkmanager.dev)
--   [`lm-sensors`](https://github.com/lm-sensors/lm-sensors)
--   [`fish`](https://github.com/fish-shell/fish-shell)
--   [`aubio`](https://github.com/aubio/aubio)
--   [`libpipewire`](https://pipewire.org)
--   `glibc`
--   `qt6-declarative`
--   `gcc-libs`
--   [`material-symbols`](https://fonts.google.com/icons)
--   [`caskaydia-cove-nerd`](https://www.nerdfonts.com/font-downloads)
--   [`swappy`](https://github.com/jtheoof/swappy)
--   [`libqalculate`](https://github.com/Qalculate/libqalculate)
--   [`bash`](https://www.gnu.org/software/bash)
--   `qt6-base`
--   `qt6-declarative`
+**Core Dependencies (from original caelestia-shell):**
+- [`caelestia-cli`](https://github.com/caelestia-dots/cli)
+- [`quickshell-git`](https://quickshell.outfoxxed.me) - this has to be the git version, not the latest tagged version
+- [`ddcutil`](https://github.com/rockowitz/ddcutil)
+- [`brightnessctl`](https://github.com/Hummer12007/brightnessctl)
+- [`app2unit`](https://github.com/Vladimir-csp/app2unit)
+- [`cava`](https://github.com/karlstav/cava)
+- [`networkmanager`](https://networkmanager.dev)
+- [`lm-sensors`](https://github.com/lm-sensors/lm-sensors)
+- [`fish`](https://github.com/fish-shell/fish-shell)
+- [`aubio`](https://github.com/aubio/aubio)
+- [`libpipewire`](https://pipewire.org)
+- `glibc`
+- `qt6-declarative`
+- `gcc-libs`
+- [`material-symbols`](https://fonts.google.com/icons)
+- [`caskaydia-cove-nerd`](https://www.nerdfonts.com/font-downloads)
+- [`swappy`](https://github.com/jtheoof/swappy)
+- [`libqalculate`](https://github.com/Qalculate/libqalculate)
+- [`bash`](https://www.gnu.org/software/bash)
+- `qt6-base`
+- `qt6-declarative`
+
+**Additional Dependencies (for custom features):**
+- [`hyprsunset`](https://github.com/hyprwm/hyprsunset) - for Night Mode functionality
+- [`warp-cli`](https://developers.cloudflare.com/warp-client/) - for VPN/Cloudflare WARP integration
+- [`jq`](https://github.com/jqlang/jq) - for JSON processing in Game Mode
+- `libcava` - Cava library for enhanced audio visualization
+- `fftw` - Fast Fourier Transform library for audio processing
 
 Build dependencies:
 
--   [`cmake`](https://cmake.org)
--   [`ninja`](https://github.com/ninja-build/ninja)
+- [`cmake`](https://cmake.org)
+- [`ninja`](https://github.com/ninja-build/ninja)
 
 To install the shell manually, install all dependencies and clone this repo to `$XDG_CONFIG_HOME/quickshell/caelestia`.
 Then simply build and install using `cmake`.
 
 ```sh
 cd $XDG_CONFIG_HOME/quickshell
-git clone https://github.com/caelestia-dots/shell.git caelestia
+git clone https://github.com/liammmcauliffe/shell.git caelestia
 
 cd caelestia
 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/
 cmake --build build
 sudo cmake --install build
 ```
+
+> [!IMPORTANT]
+> **Installation Notes for This Fork:**
+> 
+> 1. **Additional Dependencies**: Make sure to install all the additional dependencies listed above for the custom features to work properly.
+> 
+> 2. **Service Availability**: Some services (like VPN, Night Mode, Keyboard Backlight) will automatically detect if their required tools are available and disable themselves gracefully if not found.
+> 
+> 3. **Custom Features**: The custom features are designed to be optional - the shell will work without them, but you'll get the full experience with all dependencies installed.
+> 
+> 4. **Configuration**: The original configuration options still apply, plus you can configure the new services through the same `~/.config/caelestia/shell.json` file.
 
 > [!TIP]
 > You can customise the installation location via the `cmake` flags `INSTALL_LIBDIR`, `INSTALL_QMLDIR` and
@@ -177,6 +238,38 @@ target wallpaper
   function set(path: string): void
   function get(): string
   function list(): string
+target doNotDisturb
+  function isEnabled(): bool
+  function toggle(): void
+  function enable(): void
+  function disable(): void
+  function getPendingCount(): int
+target gameMode
+  function isEnabled(): bool
+  function toggle(): void
+  function enable(): void
+  function disable(): void
+target keyboardBacklight
+  function isEnabled(): bool
+  function getBrightness(): real
+  function setBrightness(value: real): void
+  function toggle(): void
+  function isAvailable(): bool
+target nightMode
+  function isEnabled(): bool
+  function toggle(): void
+  function enable(): void
+  function disable(): void
+  function isAvailable(): bool
+target vpn
+  function isEnabled(): bool
+  function getStatus(): string
+  function isAvailable(): bool
+  function needsRegistration(): bool
+  function toggle(): void
+  function connect(): void
+  function disconnect(): void
+  function register(): void
 ```
 
 ### PFP/Wallpapers
@@ -217,311 +310,313 @@ default, you must create it manually.
 
 ```json
 {
-    "appearance": {
-        "anim": {
-            "durations": {
-                "scale": 1
-            }
-        },
-        "font": {
-            "family": {
-                "material": "Material Symbols Rounded",
-                "mono": "CaskaydiaCove NF",
-                "sans": "Rubik"
-            },
-            "size": {
-                "scale": 1
-            }
-        },
-        "padding": {
-            "scale": 1
-        },
-        "rounding": {
-            "scale": 1
-        },
-        "spacing": {
-            "scale": 1
-        },
-        "transparency": {
-            "enabled": false,
-            "base": 0.85,
-            "layers": 0.4
-        }
+  "appearance": {
+    "anim": {
+      "durations": {
+        "scale": 1
+      }
     },
-    "general": {
-        "apps": {
-            "terminal": ["foot"],
-            "audio": ["pavucontrol"]
-        }
+    "font": {
+      "family": {
+        "material": "Material Symbols Rounded",
+        "mono": "CaskaydiaCove NF",
+        "sans": "Rubik"
+      },
+      "size": {
+        "scale": 1
+      }
     },
-    "background": {
-        "desktopClock": {
-            "enabled": false
-        },
-        "enabled": true,
-        "visualiser": {
-            "enabled": false,
-            "autoHide": true,
-            "rounding": 1,
-            "spacing": 1
-        }
+    "padding": {
+      "scale": 1
     },
-    "bar": {
-        "clock": {
-            "showIcon": true
-        },
-        "dragThreshold": 20,
-        "entries": [
-            {
-                "id": "logo",
-                "enabled": true
-            },
-            {
-                "id": "workspaces",
-                "enabled": true
-            },
-            {
-                "id": "spacer",
-                "enabled": true
-            },
-            {
-                "id": "activeWindow",
-                "enabled": true
-            },
-            {
-                "id": "spacer",
-                "enabled": true
-            },
-            {
-                "id": "tray",
-                "enabled": true
-            },
-            {
-                "id": "clock",
-                "enabled": true
-            },
-            {
-                "id": "statusIcons",
-                "enabled": true
-            },
-            {
-                "id": "power",
-                "enabled": true
-            },
-            {
-                "id": "idleInhibitor",
-                "enabled": false
-            }
-        ],
-        "persistent": true,
-        "scrollActions": {
-            "brightness": true,
-            "workspaces": true,
-            "volume": true
-        },
-        "showOnHover": true,
-        "status": {
-            "showAudio": false,
-            "showBattery": true,
-            "showBluetooth": true,
-            "showKbLayout": false,
-            "showMicrophone": false,
-            "showNetwork": true,
-            "showLockStatus": true
-        },
-        "tray": {
-            "background": false,
-            "iconSubs": [],
-            "recolour": false
-        },
-        "workspaces": {
-            "activeIndicator": true,
-            "activeLabel": "󰮯",
-            "activeTrail": false,
-            "label": "  ",
-            "occupiedBg": false,
-            "occupiedLabel": "󰮯",
-            "perMonitorWorkspaces": true,
-            "showWindows": true,
-            "shown": 5
-        }
+    "rounding": {
+      "scale": 1
     },
-    "border": {
-        "rounding": 25,
-        "thickness": 10
+    "spacing": {
+      "scale": 1
     },
-    "dashboard": {
-        "enabled": true,
-        "dragThreshold": 50,
-        "mediaUpdateInterval": 500,
-        "showOnHover": true
-    },
-    "launcher": {
-        "actionPrefix": ">",
-        "actions": [
-            {
-                "name": "Calculator",
-                "icon": "calculate",
-                "description": "Do simple math equations (powered by Qalc)",
-                "command": ["autocomplete", "calc"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Scheme",
-                "icon": "palette",
-                "description": "Change the current colour scheme",
-                "command": ["autocomplete", "scheme"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Wallpaper",
-                "icon": "image",
-                "description": "Change the current wallpaper",
-                "command": ["autocomplete", "wallpaper"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Variant",
-                "icon": "colors",
-                "description": "Change the current scheme variant",
-                "command": ["autocomplete", "variant"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Transparency",
-                "icon": "opacity",
-                "description": "Change shell transparency",
-                "command": ["autocomplete", "transparency"],
-                "enabled": false,
-                "dangerous": false
-            },
-            {
-                "name": "Random",
-                "icon": "casino",
-                "description": "Switch to a random wallpaper",
-                "command": ["caelestia", "wallpaper", "-r"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Light",
-                "icon": "light_mode",
-                "description": "Change the scheme to light mode",
-                "command": ["setMode", "light"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Dark",
-                "icon": "dark_mode",
-                "description": "Change the scheme to dark mode",
-                "command": ["setMode", "dark"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Shutdown",
-                "icon": "power_settings_new",
-                "description": "Shutdown the system",
-                "command": ["systemctl", "poweroff"],
-                "enabled": true,
-                "dangerous": true
-            },
-            {
-                "name": "Reboot",
-                "icon": "cached",
-                "description": "Reboot the system",
-                "command": ["systemctl", "reboot"],
-                "enabled": true,
-                "dangerous": true
-            },
-            {
-                "name": "Logout",
-                "icon": "exit_to_app",
-                "description": "Log out of the current session",
-                "command": ["loginctl", "terminate-user", ""],
-                "enabled": true,
-                "dangerous": true
-            },
-            {
-                "name": "Lock",
-                "icon": "lock",
-                "description": "Lock the current session",
-                "command": ["loginctl", "lock-session"],
-                "enabled": true,
-                "dangerous": false
-            },
-            {
-                "name": "Sleep",
-                "icon": "bedtime",
-                "description": "Suspend then hibernate",
-                "command": ["systemctl", "suspend-then-hibernate"],
-                "enabled": true,
-                "dangerous": false
-            }
-        ],
-        "dragThreshold": 50,
-        "vimKeybinds": false,
-        "enableDangerousActions": false,
-        "maxShown": 8,
-        "maxWallpapers": 9,
-        "specialPrefix": "@",
-        "useFuzzy": {
-            "apps": false,
-            "actions": false,
-            "schemes": false,
-            "variants": false,
-            "wallpapers": false
-        },
-        "showOnHover": false,
-        "hiddenApps": []
-    },
-    "lock": {
-        "recolourLogo": false
-    },
-    "notifs": {
-        "actionOnClick": false,
-        "clearThreshold": 0.3,
-        "defaultExpireTimeout": 5000,
-        "expandThreshold": 20,
-        "expire": false
-    },
-    "osd": {
-        "enabled": true,
-        "enableBrightness": true,
-        "enableMicrophone": false,
-        "hideDelay": 2000
-    },
-    "paths": {
-        "mediaGif": "root:/assets/bongocat.gif",
-        "sessionGif": "root:/assets/kurukuru.gif",
-        "wallpaperDir": "~/Pictures/Wallpapers"
-    },
-    "services": {
-        "audioIncrement": 0.1,
-        "defaultPlayer": "Spotify",
-        "gpuType": "",
-        "playerAliases": [{ "from": "com.github.th_ch.youtube_music", "to": "YT Music" }],
-        "weatherLocation": "",
-        "useFahrenheit": false,
-        "useTwelveHourClock": false,
-        "smartScheme": true,
-        "visualiserBars": 45
-    },
-    "session": {
-        "dragThreshold": 30,
-        "vimKeybinds": false,
-        "commands": {
-            "logout": ["loginctl", "terminate-user", ""],
-            "shutdown": ["systemctl", "poweroff"],
-            "hibernate": ["systemctl", "hibernate"],
-            "reboot": ["systemctl", "reboot"]
-        }
+    "transparency": {
+      "enabled": false,
+      "base": 0.85,
+      "layers": 0.4
     }
+  },
+  "general": {
+    "apps": {
+      "terminal": ["foot"],
+      "audio": ["pavucontrol"]
+    }
+  },
+  "background": {
+    "desktopClock": {
+      "enabled": false
+    },
+    "enabled": true,
+    "visualiser": {
+      "enabled": false,
+      "autoHide": true,
+      "rounding": 1,
+      "spacing": 1
+    }
+  },
+  "bar": {
+    "clock": {
+      "showIcon": true
+    },
+    "dragThreshold": 20,
+    "entries": [
+      {
+        "id": "logo",
+        "enabled": true
+      },
+      {
+        "id": "workspaces",
+        "enabled": true
+      },
+      {
+        "id": "spacer",
+        "enabled": true
+      },
+      {
+        "id": "activeWindow",
+        "enabled": true
+      },
+      {
+        "id": "spacer",
+        "enabled": true
+      },
+      {
+        "id": "tray",
+        "enabled": true
+      },
+      {
+        "id": "clock",
+        "enabled": true
+      },
+      {
+        "id": "statusIcons",
+        "enabled": true
+      },
+      {
+        "id": "power",
+        "enabled": true
+      },
+      {
+        "id": "idleInhibitor",
+        "enabled": false
+      }
+    ],
+    "persistent": true,
+    "scrollActions": {
+      "brightness": true,
+      "workspaces": true,
+      "volume": true
+    },
+    "showOnHover": true,
+    "status": {
+      "showAudio": false,
+      "showBattery": true,
+      "showBluetooth": true,
+      "showKbLayout": false,
+      "showMicrophone": false,
+      "showNetwork": true,
+      "showLockStatus": true
+    },
+    "tray": {
+      "background": false,
+      "iconSubs": [],
+      "recolour": false
+    },
+    "workspaces": {
+      "activeIndicator": true,
+      "activeLabel": "󰮯",
+      "activeTrail": false,
+      "label": "  ",
+      "occupiedBg": false,
+      "occupiedLabel": "󰮯",
+      "perMonitorWorkspaces": true,
+      "showWindows": true,
+      "shown": 5
+    }
+  },
+  "border": {
+    "rounding": 25,
+    "thickness": 10
+  },
+  "dashboard": {
+    "enabled": true,
+    "dragThreshold": 50,
+    "mediaUpdateInterval": 500,
+    "showOnHover": true
+  },
+  "launcher": {
+    "actionPrefix": ">",
+    "actions": [
+      {
+        "name": "Calculator",
+        "icon": "calculate",
+        "description": "Do simple math equations (powered by Qalc)",
+        "command": ["autocomplete", "calc"],
+        "enabled": true,
+        "dangerous": false
+      },
+      {
+        "name": "Scheme",
+        "icon": "palette",
+        "description": "Change the current colour scheme",
+        "command": ["autocomplete", "scheme"],
+        "enabled": true,
+        "dangerous": false
+      },
+      {
+        "name": "Wallpaper",
+        "icon": "image",
+        "description": "Change the current wallpaper",
+        "command": ["autocomplete", "wallpaper"],
+        "enabled": true,
+        "dangerous": false
+      },
+      {
+        "name": "Variant",
+        "icon": "colors",
+        "description": "Change the current scheme variant",
+        "command": ["autocomplete", "variant"],
+        "enabled": true,
+        "dangerous": false
+      },
+      {
+        "name": "Transparency",
+        "icon": "opacity",
+        "description": "Change shell transparency",
+        "command": ["autocomplete", "transparency"],
+        "enabled": false,
+        "dangerous": false
+      },
+      {
+        "name": "Random",
+        "icon": "casino",
+        "description": "Switch to a random wallpaper",
+        "command": ["caelestia", "wallpaper", "-r"],
+        "enabled": true,
+        "dangerous": false
+      },
+      {
+        "name": "Light",
+        "icon": "light_mode",
+        "description": "Change the scheme to light mode",
+        "command": ["setMode", "light"],
+        "enabled": true,
+        "dangerous": false
+      },
+      {
+        "name": "Dark",
+        "icon": "dark_mode",
+        "description": "Change the scheme to dark mode",
+        "command": ["setMode", "dark"],
+        "enabled": true,
+        "dangerous": false
+      },
+      {
+        "name": "Shutdown",
+        "icon": "power_settings_new",
+        "description": "Shutdown the system",
+        "command": ["systemctl", "poweroff"],
+        "enabled": true,
+        "dangerous": true
+      },
+      {
+        "name": "Reboot",
+        "icon": "cached",
+        "description": "Reboot the system",
+        "command": ["systemctl", "reboot"],
+        "enabled": true,
+        "dangerous": true
+      },
+      {
+        "name": "Logout",
+        "icon": "exit_to_app",
+        "description": "Log out of the current session",
+        "command": ["loginctl", "terminate-user", ""],
+        "enabled": true,
+        "dangerous": true
+      },
+      {
+        "name": "Lock",
+        "icon": "lock",
+        "description": "Lock the current session",
+        "command": ["loginctl", "lock-session"],
+        "enabled": true,
+        "dangerous": false
+      },
+      {
+        "name": "Sleep",
+        "icon": "bedtime",
+        "description": "Suspend then hibernate",
+        "command": ["systemctl", "suspend-then-hibernate"],
+        "enabled": true,
+        "dangerous": false
+      }
+    ],
+    "dragThreshold": 50,
+    "vimKeybinds": false,
+    "enableDangerousActions": false,
+    "maxShown": 8,
+    "maxWallpapers": 9,
+    "specialPrefix": "@",
+    "useFuzzy": {
+      "apps": false,
+      "actions": false,
+      "schemes": false,
+      "variants": false,
+      "wallpapers": false
+    },
+    "showOnHover": false,
+    "hiddenApps": []
+  },
+  "lock": {
+    "recolourLogo": false
+  },
+  "notifs": {
+    "actionOnClick": false,
+    "clearThreshold": 0.3,
+    "defaultExpireTimeout": 5000,
+    "expandThreshold": 20,
+    "expire": false
+  },
+  "osd": {
+    "enabled": true,
+    "enableBrightness": true,
+    "enableMicrophone": false,
+    "hideDelay": 2000
+  },
+  "paths": {
+    "mediaGif": "root:/assets/bongocat.gif",
+    "sessionGif": "root:/assets/kurukuru.gif",
+    "wallpaperDir": "~/Pictures/Wallpapers"
+  },
+  "services": {
+    "audioIncrement": 0.1,
+    "defaultPlayer": "Spotify",
+    "gpuType": "",
+    "playerAliases": [
+      { "from": "com.github.th_ch.youtube_music", "to": "YT Music" }
+    ],
+    "weatherLocation": "",
+    "useFahrenheit": false,
+    "useTwelveHourClock": false,
+    "smartScheme": true,
+    "visualiserBars": 45
+  },
+  "session": {
+    "dragThreshold": 30,
+    "vimKeybinds": false,
+    "commands": {
+      "logout": ["loginctl", "terminate-user", ""],
+      "shutdown": ["systemctl", "poweroff"],
+      "hibernate": ["systemctl", "hibernate"],
+      "reboot": ["systemctl", "reboot"]
+    }
+  }
 }
 ```
 
@@ -604,6 +699,10 @@ the launcher only shows an odd number of wallpapers at one time. If you only hav
 
 ## Credits
 
+### Original Project
+This is a personal fork of the excellent [caelestia-shell](https://github.com/caelestia-dots/shell) project. All credit for the original design, architecture, and core functionality goes to the original developers and contributors.
+
+### Original Credits
 Thanks to the Hyprland discord community (especially the homies in #rice-discussion) for all the help and suggestions
 for improving these dots!
 
@@ -615,14 +714,30 @@ which helped me a lot with learning how to use Quickshell.
 
 Finally another thank you to all the configs I took inspiration from (only one for now):
 
--   [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
+- [Axenide/Ax-Shell](https://github.com/Axenide/Ax-Shell)
+
+### Additional Credits for Custom Features
+- [Cava](https://github.com/karlstav/cava) - Audio visualizer library
+- [Hyprsunset](https://github.com/hyprwm/hyprsunset) - Blue light filter for Hyprland
+- [Cloudflare WARP](https://developers.cloudflare.com/warp-client/) - VPN service integration
+
+## Contributing
+
+This is a personal fork, but if you find any issues or have suggestions for improvements, feel free to:
+- Open an issue on [GitHub](https://github.com/liammmcauliffe/shell/issues)
+- Submit a pull request if you have improvements
+- Check the [original project](https://github.com/caelestia-dots/shell) for upstream issues and features
+
+## License
+
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## Stonks 📈
 
-<a href="https://www.star-history.com/#caelestia-dots/shell&Date">
+<a href="https://www.star-history.com/#liammmcauliffe/shell&caelestia-dots/shell&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=caelestia-dots/shell&type=Date" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=liammmcauliffe/shell,caelestia-dots/shell&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=liammmcauliffe/shell,caelestia-dots/shell&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=liammmcauliffe/shell,caelestia-dots/shell&type=Date" />
  </picture>
 </a>
