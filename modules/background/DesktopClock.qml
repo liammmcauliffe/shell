@@ -14,5 +14,6 @@ Item {
         text: Time.format(Config.services.useTwelveHourClock ? "hh:mm:ss A" : "hh:mm:ss")
         font.pointSize: Appearance.font.size.extraLarge
         font.bold: true
+        font.family: Appearance.font.family.clock
     }
 }

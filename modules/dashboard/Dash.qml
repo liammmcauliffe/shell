@@ -6,6 +6,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+
 GridLayout {
     id: root
     required property PersistentProperties visibilities
@@ -112,13 +113,13 @@ GridLayout {
                     text: "Idle Inhibitor"
                     delay: 500
                     timeout: 3000
-                    
+
                     background: Rectangle {
                         color: Colours.palette.m3surfaceContainerHighest
                         radius: 4 // Material 3 extra-small corner radius
                         border.width: 0 // Remove border
                     }
-                    
+
                     contentItem: Text {
                         text: "Idle Inhibitor"
                         color: Colours.palette.m3onSurface
@@ -188,13 +189,13 @@ GridLayout {
                     text: NightMode.available ? "Night Mode" : "Night Mode (Not Available)"
                     delay: 500
                     timeout: 3000
-                    
+
                     background: Rectangle {
                         color: Colours.palette.m3surfaceContainerHighest
                         radius: 4 // Material 3 extra-small corner radius
                         border.width: 0 // Remove border
                     }
-                    
+
                     contentItem: Text {
                         text: NightMode.available ? "Night Mode" : "Night Mode (Not Available)"
                         color: NightMode.available ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
@@ -265,13 +266,13 @@ GridLayout {
                     text: KeyboardBacklight.available ? "Keyboard Backlight" : "Keyboard Backlight (Not Available)"
                     delay: 500
                     timeout: 3000
-                    
+
                     background: Rectangle {
                         color: Colours.palette.m3surfaceContainerHighest
                         radius: 4 // Material 3 extra-small corner radius
                         border.width: 0 // Remove border
                     }
-                    
+
                     contentItem: Text {
                         text: KeyboardBacklight.available ? "Keyboard Backlight" : "Keyboard Backlight (Not Available)"
                         color: KeyboardBacklight.available ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
@@ -334,13 +335,13 @@ GridLayout {
                     text: "Do Not Disturb"
                     delay: 500
                     timeout: 3000
-                    
+
                     background: Rectangle {
                         color: Colours.palette.m3surfaceContainerHighest
                         radius: 4 // Material 3 extra-small corner radius
                         border.width: 0 // Remove border
                     }
-                    
+
                     contentItem: Text {
                         text: "Do Not Disturb"
                         color: Colours.palette.m3onSurface
@@ -411,13 +412,13 @@ GridLayout {
                     text: Vpn.available ? (Vpn.needsRegistration ? "Cloudflare WARP (Needs Registration)" : "Cloudflare WARP") : "Cloudflare WARP (Not Available)"
                     delay: 500
                     timeout: 3000
-                    
+
                     background: Rectangle {
                         color: Colours.palette.m3surfaceContainerHighest
                         radius: 4 // Material 3 extra-small corner radius
                         border.width: 0 // Remove border
                     }
-                    
+
                     contentItem: Text {
                         text: Vpn.available ? (Vpn.needsRegistration ? "Cloudflare WARP (Needs Registration)" : "Cloudflare WARP") : "Cloudflare WARP (Not Available)"
                         color: Vpn.available ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
@@ -472,13 +473,13 @@ GridLayout {
                     text: "Gamemode"
                     delay: 500
                     timeout: 3000
-                    
+
                     background: Rectangle {
                         color: Colours.palette.m3surfaceContainerHighest
                         radius: 4 // Material 3 extra-small corner radius
                         border.width: 0 // Remove border
                     }
-                    
+
                     contentItem: Text {
                         text: "Gamemode"
                         color: Colours.palette.m3onSurface

@@ -33,7 +33,7 @@ Column {
         horizontalAlignment: StyledText.AlignHCenter
         text: Time.format(Config.services.useTwelveHourClock ? "hh\nmm\nA" : "hh\nmm")
         font.pointSize: Appearance.font.size.smaller
-        font.family: Appearance.font.family.mono
+        font.family: Appearance.font.family.clock
         color: root.colour
     }
 }
