@@ -6,7 +6,6 @@ import qs.config
 import Caelestia
 import Quickshell
 import Quickshell.Widgets
-import QtQuick
 
 Item {
     id: root

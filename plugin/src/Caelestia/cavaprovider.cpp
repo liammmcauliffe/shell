@@ -1,46 +1,23 @@
 #include "cavaprovider.hpp"
-
-#include "audiocollector.hpp"
 #include "audioprovider.hpp"
+#include <qdebug.h>
+#include <qobject.h>
 #include <cava/cavacore.h>
 #include <cmath>
 #include <cstddef>
-#include <qdebug.h>
 
 namespace caelestia {
 
-CavaProcessor::CavaProcessor(AudioCollector* collector, QObject* parent)
-    : AudioProcessor(collector, parent)
+CavaProcessor::CavaProcessor(AudioProvider* provider, QObject* parent)
+    : AudioProcessor(provider, parent)
     , m_plan(nullptr)
-    , m_in(nullptr)
+    , m_in(new double[static_cast<size_t>(m_chunkSize)])
     , m_out(nullptr)
-    , m_bars(0) {
-    if (collector) {
-        m_in = new double[collector->chunkSize()];
-    }
-};
+    , m_bars(0) {};
 
 CavaProcessor::~CavaProcessor() {
     cleanup();
-    if (m_in) {
-        delete[] m_in;
-    }
-}
-
-void CavaProcessor::setCollector(AudioCollector* collector) {
-    AudioProcessor::setCollector(collector);
-
-    if (m_in) {
-        delete[] m_in;
-    }
-
-    if (collector) {
-        m_in = new double[collector->chunkSize()];
-    } else {
-        m_in = nullptr;
-    }
-
-    reload();
+    delete[] m_in;
 }
 
 void CavaProcessor::setBars(int bars) {
@@ -48,7 +25,6 @@ void CavaProcessor::setBars(int bars) {
         qWarning() << "CavaProcessor::setBars: bars must be greater than 0. Setting to 0.";
         bars = 0;
     }
-
     if (m_bars != bars) {
         m_bars = bars;
         reload();
@@ -61,11 +37,11 @@ void CavaProcessor::reload() {
 }
 
 void CavaProcessor::cleanup() {
-    if (m_plan) {
-        cava_destroy(m_plan);
-        m_plan = nullptr;
+    if (!m_plan) {
+        return;
     }
-
+    cava_destroy(m_plan);
+    m_plan = nullptr;
     if (m_out) {
         delete[] m_out;
         m_out = nullptr;
@@ -73,31 +49,25 @@ void CavaProcessor::cleanup() {
 }
 
 void CavaProcessor::initCava() {
-    if (m_plan || m_bars == 0 || !m_collector) {
+    if (m_plan || m_bars == 0) {
         return;
     }
-
-    m_plan = cava_init(m_bars, m_collector->sampleRate(), 1, 1, 0.85, 50, 10000);
-
+    m_plan = cava_init(m_bars, static_cast<unsigned int>(m_sampleRate), 1, 1, 0.85, 50, 10000);
     if (m_plan->status == -1) {
         qWarning() << "CavaProcessor::initCava: failed to initialise cava plan";
         cleanup();
         return;
     }
-
     m_out = new double[static_cast<size_t>(m_bars)];
 }
 
-void CavaProcessor::process() {
-    if (!m_plan || m_bars == 0 || !m_collector || !m_in || !m_out) {
+void CavaProcessor::processChunk(const QVector<double>& chunk) {
+    if (!m_plan || m_bars == 0) {
         return;
     }
-
-    const int count = static_cast<int>(m_collector->readChunk(m_in));
-
+    std::copy(chunk.constBegin(), chunk.constEnd(), m_in);
     // Process in data via cava
-    cava_execute(m_in, count, m_out, m_plan);
-
+    cava_execute(m_in, m_chunkSize, m_out, m_plan);
     // Apply monstercat filter
     for (int i = 0; i < m_bars; i++) {
         for (int j = i - 1; j >= 0; j--) {
@@ -107,7 +77,6 @@ void CavaProcessor::process() {
             m_out[j] = std::max(m_out[i] / std::pow(1.5, j - i), m_out[j]);
         }
     }
-
     // Update values
     QVector<double> values(m_bars);
     std::copy(m_out, m_out + m_bars, values.begin());
@@ -117,13 +86,12 @@ void CavaProcessor::process() {
     }
 }
 
-CavaProvider::CavaProvider(QObject* parent)
-    : AudioProvider(parent)
+CavaProvider::CavaProvider(int sampleRate, int chunkSize, QObject* parent)
+    : AudioProvider(sampleRate, chunkSize, parent)
     , m_bars(0)
-    , m_values(m_bars, 0.0) {
-    m_processor = new CavaProcessor(m_collector);
+    , m_values(m_bars) {
+    m_processor = new CavaProcessor(this);
     init();
-
     connect(static_cast<CavaProcessor*>(m_processor), &CavaProcessor::valuesChanged, this, &CavaProvider::updateValues);
 }
 
@@ -136,12 +104,11 @@ void CavaProvider::setBars(int bars) {
         qWarning() << "CavaProvider::setBars: bars must be greater than 0. Setting to 0.";
         bars = 0;
     }
-
     if (m_bars == bars) {
         return;
     }
 
-    m_values.resize(bars, 0.0);
+    m_values.resize(bars);
     m_bars = bars;
     emit barsChanged();
     emit valuesChanged();

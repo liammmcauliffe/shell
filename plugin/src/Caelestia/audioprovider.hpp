@@ -1,58 +1,91 @@
 #pragma once
 
-#include "audiocollector.hpp"
 #include "service.hpp"
-#include <qqmlintegration.h>
+#include <qaudiosource.h>
+#include <qiodevice.h>
+#include <qmutex.h>
+#include <qobject.h>
+#include <qqueue.h>
+#include <qthread.h>
 #include <qtimer.h>
+#include <qvector.h>
+#include <qqmlintegration.h>
 
 namespace caelestia {
 
-class AudioProcessor : public QObject {
+class AudioProvider;
+class AudioCollector : public QObject {
     Q_OBJECT
 
 public:
-    explicit AudioProcessor(AudioCollector* collector, QObject* parent = nullptr);
-    ~AudioProcessor();
+    explicit AudioCollector(AudioProvider* provider, QObject* parent = nullptr);
+    ~AudioCollector();
 
     void init();
 
 protected:
-    AudioCollector* m_collector;
-
-    Q_INVOKABLE virtual void setCollector(AudioCollector* collector);
+    AudioProvider* m_provider;
+    int m_sampleRate;
+    int m_chunkSize;
+    QVector<double> m_chunk;
+    int m_chunkOffset;
 
 private:
-    QTimer* m_timer;
+    QAudioSource* m_source;
+    QIODevice* m_device;
 
     Q_INVOKABLE void start();
     Q_INVOKABLE void stop();
 
-    virtual void process() = 0;
+    void handleStateChanged(QtAudio::State state) const;
+    void loadChunk();
+};
+
+class AudioProcessor : public QObject {
+    Q_OBJECT
+public:
+    explicit AudioProcessor(AudioProvider* provider, QObject* parent = nullptr);
+    ~AudioProcessor();
+    void init();
+
+protected:
+    int m_sampleRate;
+    int m_chunkSize;
+
+private:
+    AudioProvider* m_provider;
+    QTimer* m_timer;
+    Q_INVOKABLE void start();
+    Q_INVOKABLE void stop();
+    void handleTimeout();
+    virtual void processChunk(const QVector<double>& chunk) = 0;
 };
 
 class AudioProvider : public Service {
     Q_OBJECT
 
-    Q_PROPERTY(AudioCollector* collector READ collector WRITE setCollector NOTIFY collectorChanged)
-
 public:
-    explicit AudioProvider(QObject* parent = nullptr);
+    explicit AudioProvider(int sampleRate = 44100, int chunkSize = 512, QObject* parent = nullptr);
     ~AudioProvider();
 
-    AudioCollector* collector() const;
-    void setCollector(AudioCollector* collector);
-
-signals:
-    void collectorChanged();
+    [[nodiscard]] int sampleRate() const;
+    [[nodiscard]] int chunkSize() const;
+    [[nodiscard]] QVector<double> nextChunk();
+    void loadChunk(const QVector<double>& chunk);
 
 protected:
+    int m_sampleRate;
+    int m_chunkSize;
+    QMutex m_mutex;
+    QQueue<QVector<double>> m_chunks;
     AudioCollector* m_collector;
     AudioProcessor* m_processor;
 
     void init();
 
 private:
-    QThread* m_thread;
+    QThread* m_collectorThread;
+    QThread* m_processorThread;
 
     void start() override;
     void stop() override;

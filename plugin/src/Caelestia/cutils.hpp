@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QtQuick/qquickitem.h>
+#include <qquickitem.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
 

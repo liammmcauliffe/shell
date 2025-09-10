@@ -7,7 +7,7 @@ import QtQuick
 Item {
     id: root
 
-    required property Actions.Action modelData
+    required property var modelData
     required property var list
 
     implicitHeight: Config.launcher.sizes.itemHeight
@@ -16,7 +16,7 @@ Item {
     anchors.right: parent?.right
 
     StateLayer {
-        radius: Appearance.rounding.full
+        radius: Appearance.rounding.normal
 
         function onClicked(): void {
             root.modelData?.onClicked(root.list);

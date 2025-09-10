@@ -1,5 +1,4 @@
 #include "appdb.hpp"
-
 #include <qsqldatabase.h>
 #include <qsqlquery.h>
 #include <quuid.h>
@@ -69,7 +68,6 @@ AppDb::AppDb(QObject* parent)
     auto db = QSqlDatabase::addDatabase("QSQLITE", m_uuid);
     db.setDatabaseName(":memory:");
     db.open();
-
     QSqlQuery query(db);
     query.exec("CREATE TABLE IF NOT EXISTS frequencies (id TEXT PRIMARY KEY, frequency INTEGER)");
 }
@@ -86,14 +84,11 @@ void AppDb::setPath(const QString& path) {
     if (m_path == path) {
         return;
     }
-
     m_path = path;
     emit pathChanged();
-
     auto db = QSqlDatabase::database(m_uuid, false);
     db.close();
     db.setDatabaseName(path);
-
     updateAppFrequencies();
 }
 
@@ -105,10 +100,8 @@ void AppDb::setEntries(const QList<QObject*>& entries) {
     if (m_entries == entries) {
         return;
     }
-
     m_entries = entries;
     emit entriesChanged();
-
     updateApps();
 }
 
@@ -126,7 +119,6 @@ QList<AppEntry*> AppDb::apps() const {
 void AppDb::incrementFrequency(const QString& id) {
     auto db = QSqlDatabase::database(m_uuid);
     QSqlQuery query(db);
-
     query.prepare("INSERT INTO frequencies (id, frequency) "
                   "VALUES (:id, 1) "
                   "ON CONFLICT (id) DO UPDATE SET frequency = frequency + 1");
@@ -136,31 +128,24 @@ void AppDb::incrementFrequency(const QString& id) {
     for (auto app : m_apps) {
         if (app->id() == id) {
             const auto before = apps();
-
             app->incrementFrequency();
-
             if (before != apps()) {
                 emit appsChanged();
             }
-
             return;
         }
     }
-
     qWarning() << "AppDb::incrementFrequency: could not find app with id" << id;
 }
 
 quint32 AppDb::getFrequency(const QString& id) const {
     auto db = QSqlDatabase::database(m_uuid);
     QSqlQuery query(db);
-
     query.prepare("SELECT frequency FROM frequencies WHERE id = :id");
     query.bindValue(":id", id);
-
     if (query.exec() && query.next()) {
         return query.value(0).toUInt();
     }
-
     return 0;
 }
 
@@ -172,7 +157,6 @@ void AppDb::updateAppFrequencies() {
 
 void AppDb::updateApps() {
     bool dirty = false;
-
     for (auto entry : m_entries) {
         const auto id = entry->property("id").toString();
         if (!m_apps.contains(id)) {

@@ -33,11 +33,24 @@ StyledListView {
 
     highlightMoveDuration: Appearance.anim.durations.normal
     highlightResizeDuration: 0
+    preferredHighlightBegin: 0
+    preferredHighlightEnd: height
+    highlightRangeMode: ListView.ApplyRange
 
+    highlightFollowsCurrentItem: false
     highlight: StyledRect {
-        radius: Appearance.rounding.full
+        radius: Appearance.rounding.normal
         color: Colours.palette.m3onSurface
         opacity: 0.08
+        y: root.currentItem?.y ?? 0
+        implicitWidth: root.width
+        implicitHeight: root.currentItem?.implicitHeight ?? 0
+        Behavior on y {
+            Anim {
+                duration: Appearance.anim.durations.expressiveDefaultSpatial
+                easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+            }
+        }
     }
 
     property string currentState: "apps"

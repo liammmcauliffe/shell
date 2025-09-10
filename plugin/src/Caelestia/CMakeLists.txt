@@ -6,10 +6,10 @@ pkg_check_modules(Aubio IMPORTED_TARGET aubio REQUIRED)
 pkg_check_modules(Cava IMPORTED_TARGET cava REQUIRED)
 
 set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
-qt_standard_project_setup(REQUIRES 6.9)
 
 qt_add_qml_module(caelestia
     URI Caelestia
+    VERSION ${VERSION_SHORT}
     SOURCES
         cutils.hpp cutils.cpp
         cachingimagemanager.hpp cachingimagemanager.cpp
@@ -31,9 +31,12 @@ qt_query_qml_module(caelestia
     TARGET_PATH module_target_path
     QMLDIR module_qmldir
     TYPEINFO module_typeinfo
+    QML_FILES module_qml_files
+    RESOURCES module_resources
 )
 
 message(STATUS "Created QML module ${module_uri}, version ${module_version}")
+
 
 set(module_dir "${INSTALL_QMLDIR}/${module_target_path}")
 install(TARGETS caelestia LIBRARY DESTINATION "${module_dir}" RUNTIME DESTINATION "${module_dir}")

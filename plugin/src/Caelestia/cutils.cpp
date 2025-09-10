@@ -1,7 +1,7 @@
 #include "cutils.hpp"
 
-#include <QtQuick/qquickitemgrabresult.h>
-#include <QtQuick/qquickwindow.h>
+#include <qquickitemgrabresult.h>
+#include <qquickwindow.h>
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qqmlengine.h>
