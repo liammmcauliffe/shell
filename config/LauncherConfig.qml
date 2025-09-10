@@ -7,7 +7,7 @@ JsonObject {
     property int maxWallpapers: 9 // Warning: even numbers look bad
     property string specialPrefix: "@"
     property string actionPrefix: "/"
-    property bool enableDangerousActions: false // Allow actions that can cause losing data, like shutdown, reboot and logout
+    property bool enableDangerousActions: true // Allow actions that can cause losing data, like shutdown, reboot and logout
     property int dragThreshold: 50
     property bool vimKeybinds: false
     property list<string> hiddenApps: []
@@ -42,7 +42,7 @@ JsonObject {
             icon: "palette",
             description: "Change the current colour scheme",
             command: ["autocomplete", "scheme"],
-            enabled: true,
+            enabled: false,
             dangerous: false
         },
         {
@@ -58,7 +58,7 @@ JsonObject {
             icon: "colors",
             description: "Change the current scheme variant",
             command: ["autocomplete", "variant"],
-            enabled: true,
+            enabled: false,
             dangerous: false
         },
         {
@@ -82,7 +82,7 @@ JsonObject {
             icon: "light_mode",
             description: "Change the scheme to light mode",
             command: ["setMode", "light"],
-            enabled: true,
+            enabled: false,
             dangerous: false
         },
         {
@@ -90,7 +90,7 @@ JsonObject {
             icon: "dark_mode",
             description: "Change the scheme to dark mode",
             command: ["setMode", "dark"],
-            enabled: true,
+            enabled: false,
             dangerous: false
         },
         {
@@ -130,7 +130,7 @@ JsonObject {
             icon: "bedtime",
             description: "Suspend then hibernate",
             command: ["systemctl", "suspend-then-hibernate"],
-            enabled: true,
+            enabled: false,
             dangerous: false
         }
     ]
