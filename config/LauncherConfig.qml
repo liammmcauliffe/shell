@@ -42,7 +42,7 @@ JsonObject {
             icon: "palette",
             description: "Change the current colour scheme",
             command: ["autocomplete", "scheme"],
-            enabled: false,
+            enabled: true,
             dangerous: false
         },
         {
@@ -58,7 +58,7 @@ JsonObject {
             icon: "colors",
             description: "Change the current scheme variant",
             command: ["autocomplete", "variant"],
-            enabled: false,
+            enabled: true,
             dangerous: false
         },
         {
@@ -82,7 +82,7 @@ JsonObject {
             icon: "light_mode",
             description: "Change the scheme to light mode",
             command: ["setMode", "light"],
-            enabled: false,
+            enabled: true,
             dangerous: false
         },
         {
@@ -90,7 +90,7 @@ JsonObject {
             icon: "dark_mode",
             description: "Change the scheme to dark mode",
             command: ["setMode", "dark"],
-            enabled: false,
+            enabled: true,
             dangerous: false
         },
         {
