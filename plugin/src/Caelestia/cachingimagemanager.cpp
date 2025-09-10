@@ -1,6 +1,6 @@
 #include "cachingimagemanager.hpp"
 
-#include <qquickwindow.h>
+#include <QtQuick/qquickwindow.h>
 #include <qcryptographichash.h>
 #include <qdir.h>
 #include <qfileinfo.h>

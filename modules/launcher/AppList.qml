@@ -20,19 +20,13 @@ StyledListView {
     model: ScriptModel {
         id: model
 
-        onValuesChanged: {
-            if (root.currentIndex >= count) {
-                root.currentIndex = 0;
-            }
-        }
+        onValuesChanged: root.currentIndex = 0
     }
 
     spacing: Appearance.spacing.small
     orientation: Qt.Vertical
     implicitHeight: (Config.launcher.sizes.itemHeight + spacing) * Math.min(Config.launcher.maxShown, count) - spacing
 
-    highlightMoveDuration: Appearance.anim.durations.normal
-    highlightResizeDuration: 0
     preferredHighlightBegin: 0
     preferredHighlightEnd: height
     highlightRangeMode: ListView.ApplyRange
@@ -42,9 +36,11 @@ StyledListView {
         radius: Appearance.rounding.normal
         color: Colours.palette.m3onSurface
         opacity: 0.08
+
         y: root.currentItem?.y ?? 0
         implicitWidth: root.width
         implicitHeight: root.currentItem?.implicitHeight ?? 0
+
         Behavior on y {
             Anim {
                 duration: Appearance.anim.durations.expressiveDefaultSpatial
@@ -53,86 +49,65 @@ StyledListView {
         }
     }
 
-    property string currentState: "apps"
-    property string lastSearchText: ""
-
-    property string searchText: search.text
-
-    function updateModelValues() {
-        const text = search.text;
-        switch (currentState) {
-            case "apps":
-                model.values = Apps.search(text);
-                root.delegate = appItem;
-                break;
-            case "actions":
-                model.values = Actions.query(text);
-                root.delegate = actionItem;
-                break;
-            case "calc":
-                model.values = [0];
-                root.delegate = calcItem;
-                break;
-            case "scheme":
-                model.values = Schemes.query(text);
-                root.delegate = schemeItem;
-                break;
-            case "variant":
-                model.values = M3Variants.query(text);
-                root.delegate = variantItem;
-                break;
-        }
-    }
-
-    onSearchTextChanged: {
+    state: {
         const text = search.text;
         const prefix = Config.launcher.actionPrefix;
-        let newState = "apps";
-        
         if (text.startsWith(prefix)) {
             for (const action of ["calc", "scheme", "variant"])
-                if (text.startsWith(`${prefix}${action} `)) {
-                    newState = action;
-                    break;
-                }
-            if (newState === "apps")
-                newState = "actions";
+                if (text.startsWith(`${prefix}${action} `))
+                    return action;
+
+            return "actions";
         }
 
-        if (newState !== currentState) {
-            currentState = newState;
-            state = currentState;
-            if (state === "scheme" || state === "variant")
-                Schemes.reload();
-        }
-        
-        lastSearchText = text;
-        updateModelValues();
+        return "apps";
     }
 
-    onCurrentStateChanged: {
-        updateModelValues();
-    }
-
-    Component.onCompleted: {
-        updateModelValues();
+    onStateChanged: {
+        if (state === "scheme" || state === "variant")
+            Schemes.reload();
     }
 
     states: [
         State {
             name: "apps"
+
+            PropertyChanges {
+                model.values: Apps.search(search.text)
+                root.delegate: appItem
+            }
         },
         State {
             name: "actions"
+
+            PropertyChanges {
+                model.values: Actions.query(search.text)
+                root.delegate: actionItem
+            }
         },
         State {
             name: "calc"
+
+            PropertyChanges {
+                model.values: [0]
+                root.delegate: calcItem
+            }
         },
         State {
             name: "scheme"
+
+            PropertyChanges {
+                model.values: Schemes.query(search.text)
+                root.delegate: schemeItem
+            }
         },
         State {
             name: "variant"
+
+            PropertyChanges {
+                model.values: M3Variants.query(search.text)
+                root.delegate: variantItem
+            }
         }
     ]
 

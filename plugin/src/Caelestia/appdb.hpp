@@ -1,4 +1,5 @@
 #pragma once
+
 #include <qhash.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
@@ -12,6 +13,7 @@ class AppEntry : public QObject {
 
     // The actual DesktopEntry, but we don't have access to the type so it's a QObject
     Q_PROPERTY(QObject* entry READ entry CONSTANT)
+
     Q_PROPERTY(quint32 frequency READ frequency NOTIFY frequencyChanged)
     Q_PROPERTY(QString id READ id CONSTANT)
     Q_PROPERTY(QString name READ name CONSTANT)
@@ -24,10 +26,13 @@ class AppEntry : public QObject {
 
 public:
     explicit AppEntry(QObject* entry, quint32 frequency, QObject* parent = nullptr);
+
     [[nodiscard]] QObject* entry() const;
+
     [[nodiscard]] quint32 frequency() const;
     void setFrequency(quint32 frequency);
     void incrementFrequency();
+
     [[nodiscard]] QString id() const;
     [[nodiscard]] QString name() const;
     [[nodiscard]] QString desc() const;
@@ -56,12 +61,17 @@ class AppDb : public QObject {
 
 public:
     explicit AppDb(QObject* parent = nullptr);
+
     [[nodiscard]] QString uuid() const;
+
     [[nodiscard]] QString path() const;
     void setPath(const QString& path);
+
     [[nodiscard]] QList<QObject*> entries() const;
     void setEntries(const QList<QObject*>& entries);
+
     [[nodiscard]] QList<AppEntry*> apps() const;
+
     Q_INVOKABLE void incrementFrequency(const QString& id);
 
 signals:

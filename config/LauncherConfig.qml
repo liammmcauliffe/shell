@@ -7,9 +7,10 @@ JsonObject {
     property int maxWallpapers: 9 // Warning: even numbers look bad
     property string specialPrefix: "@"
     property string actionPrefix: "/"
-    property bool enableDangerousActions: true // Allow actions that can cause losing data, like shutdown, reboot and logout
+    property bool enableDangerousActions: false // Allow actions that can cause losing data, like shutdown, reboot and logout
     property int dragThreshold: 50
     property bool vimKeybinds: false
+    property list<string> hiddenApps: []
     property UseFuzzy useFuzzy: UseFuzzy {}
     property Sizes sizes: Sizes {}
 

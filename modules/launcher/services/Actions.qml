@@ -1,8 +1,11 @@
-import QtQuick
-import QtQuick.Controls
+pragma Singleton
+
 import ".."
-import "../../config"
-import "../../utils"
+import qs.services
+import qs.config
+import qs.utils
+import Quickshell
+import QtQuick
 
 Searcher {
     id: root
