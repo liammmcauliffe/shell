@@ -16,7 +16,7 @@
 > **Repository**: [liammmcauliffe/shell](https://github.com/liammmcauliffe/shell)  
 > **Original Project**: [caelestia-dots/shell](https://github.com/caelestia-dots/shell)
 
-
+https://github.com/user-attachments/assets/5a9e183f-5d58-4308-8567-9c8a50e12476
 
 ## Components
 
