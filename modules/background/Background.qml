@@ -64,14 +64,42 @@ Loader {
 
 
             Loader {
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.margins: Appearance.padding.large
-
+                id: clockLoader
                 active: Config.background.desktopClock.enabled
                 asynchronous: true
-
                 source: "DesktopClock.qml"
+                
+                // Simple positioning based on configuration
+                x: {
+                    const pos = Config.background.desktopClock.position
+                    const barWidth = Config.bar.sizes.innerWidth
+                    const padding = Appearance.padding.large
+                    switch (pos) {
+                        case "top-left": return barWidth + padding
+                        case "top-right": return parent.width - width - barWidth
+                        case "bottom-left": return barWidth + padding
+                        case "bottom-right": return parent.width - width - barWidth
+                        case "center": return (parent.width - width) / 2
+                        case "random": return Math.random() * (parent.width - width - barWidth - padding) + barWidth + padding
+                        case "custom": return Config.background.desktopClock.customX
+                        default: return (parent.width - width) / 2
+                    }
+                }
+                
+                y: {
+                    const pos = Config.background.desktopClock.position
+                    const padding = Appearance.padding.large
+                    switch (pos) {
+                        case "top-left": return padding
+                        case "top-right": return padding
+                        case "bottom-left": return parent.height - height - padding
+                        case "bottom-right": return parent.height - height - padding
+                        case "center": return (parent.height - height) / 2
+                        case "random": return Math.random() * (parent.height - height - padding * 2) + padding
+                        case "custom": return Config.background.desktopClock.customY
+                        default: return (parent.height - height) / 2
+                    }
+                }
             }
         }
     }
