@@ -10,6 +10,7 @@ qt_standard_project_setup(REQUIRES 6.9)
 
 qt_add_qml_module(caelestia
     URI Caelestia
+    VERSION ${VERSION}
     SOURCES
         cutils.hpp cutils.cpp
         cachingimagemanager.hpp cachingimagemanager.cpp
@@ -22,6 +23,7 @@ qt_add_qml_module(caelestia
         audioprovider.hpp audioprovider.cpp
         cavaprovider.hpp cavaprovider.cpp
         appdb.hpp appdb.cpp
+        requests.hpp requests.cpp
 )
 
 qt_query_qml_module(caelestia
