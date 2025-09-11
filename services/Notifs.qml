@@ -13,6 +13,7 @@ Singleton {
 
     readonly property list<Notif> list: []
     readonly property list<Notif> popups: list.filter(n => n.popup)
+    readonly property Component notifComp: notifComp
 
     NotificationServer {
         id: server

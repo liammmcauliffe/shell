@@ -34,11 +34,16 @@ Singleton {
     function processPendingNotifications(): void {
         if (!enabled && pending.length > 0) {
             for (const notif of pending) {
-                // Re-add to main notification list
-                Notifs.list.push(Notifs.notifComp.createObject(Notifs, {
-                    popup: true,
-                    notification: notif
-                }));
+                if (notif && Notifs.notifComp) {
+                    // Re-add to main notification list
+                    const notifObj = Notifs.notifComp.createObject(null, {
+                        popup: true,
+                        notification: notif
+                    });
+                    if (notifObj) {
+                        Notifs.list.push(notifObj);
+                    }
+                }
             }
             pending = [];
         }
@@ -51,9 +56,11 @@ Singleton {
             processPendingNotifications();
         } else {
             // DND enabled - hide all current popups
-            for (const notif of Notifs.list) {
-                if (notif.popup) {
-                    notif.popup = false;
+            if (Notifs && Notifs.list) {
+                for (const notif of Notifs.list) {
+                    if (notif && notif.popup) {
+                        notif.popup = false;
+                    }
                 }
             }
         }
