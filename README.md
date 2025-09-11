@@ -41,6 +41,7 @@ This personal fork includes several additional features and modifications beyond
 - **Notifications Popout**: Improved notification management with Do Not Disturb integration
 - **Additional Assets**: Custom globe.gif and dino.png assets
 - **Enhanced Visualizer**: Better audio visualization with Cava backend
+- **Refactored QuickToggles**: Modular, configurable toggle system with zero code duplication
 
 ### 🔧 Technical Improvements
 - **Custom C++ Plugin**: Native Cava integration for better audio processing
@@ -654,6 +655,198 @@ programs.caelestia = {
 The module automatically adds Caelestia shell to the path with **full functionality**. The CLI is not required, however you have the option to enable and configure it.
 
 </details>
+
+## QuickToggles System
+
+The QuickToggles system has been completely refactored to eliminate code duplication and provide a flexible, configuration-driven approach for managing system toggles.
+
+### Features
+
+- **Zero Code Duplication**: All toggles use the same reusable `ToggleButton` component
+- **Fully Configurable**: All settings can be customized via JSON configuration
+- **Smart Loading States**: Automatic handling of connecting/disconnecting states
+- **Availability Detection**: Automatically hides unavailable services
+- **Consistent Animations**: All toggles use the same smooth Material Design 3 animations
+- **Easy to Extend**: Adding new toggles requires minimal code
+
+### Configuration
+
+Add the `quickToggles` section to your `~/.config/caelestia/shell.json`:
+
+```json
+{
+  "quickToggles": {
+    "layout": {
+      "spacing": 12
+    },
+    "toggles": {
+      "idleInhibitor": {
+        "enabled": true,
+        "name": "Idle Inhibitor",
+        "iconEnabled": "pause_circle",
+        "iconDisabled": "play_circle",
+        "colorScheme": "primary"
+      },
+      "nightMode": {
+        "enabled": true,
+        "name": "Night Mode",
+        "iconEnabled": "dark_mode",
+        "iconDisabled": "light_mode",
+        "colorScheme": "secondary"
+      },
+      "keyboardBacklight": {
+        "enabled": true,
+        "name": "Keyboard Backlight",
+        "iconEnabled": "keyboard",
+        "iconDisabled": "keyboard",
+        "colorScheme": "tertiary"
+      },
+      "doNotDisturb": {
+        "enabled": true,
+        "name": "Do Not Disturb",
+        "iconEnabled": "notifications_off",
+        "iconDisabled": "notifications",
+        "colorScheme": "error"
+      },
+      "vpn": {
+        "enabled": true,
+        "name": "Cloudflare WARP",
+        "iconEnabled": "shield",
+        "iconDisabled": "shield",
+        "colorScheme": "primary",
+        "showLoadingState": true
+      },
+      "gameMode": {
+        "enabled": true,
+        "name": "Gamemode",
+        "iconEnabled": "rocket_launch",
+        "iconDisabled": "sports_esports",
+        "colorScheme": "secondary"
+      }
+    },
+    "tooltips": {
+      "enabled": true,
+      "delay": 500,
+      "timeout": 3000,
+      "showUnavailableServices": true
+    }
+  }
+}
+```
+
+### Adding Custom QuickToggles
+
+To add a new toggle, follow these steps:
+
+#### 1. Create Your Service
+
+Create a new service in `services/YourService.qml`:
+
+```qml
+pragma Singleton
+
+import Quickshell
+import Quickshell.Io
+
+Singleton {
+    id: root
+
+    property bool enabled: false
+    property bool available: true // Set to false if service is unavailable
+
+    PersistentProperties {
+        id: props
+        property bool enabled: false
+        reloadableId: "yourService"
+    }
+
+    // Your service logic here
+    function toggle(): void {
+        enabled = !enabled;
+        // Add your toggle logic
+    }
+
+    // Optional: Add connecting/disconnecting states
+    property bool connecting: false
+    property bool disconnecting: false
+
+    IpcHandler {
+        target: "yourService"
+        function toggle(): void { root.toggle(); }
+        function isEnabled(): bool { return root.enabled; }
+        function enable(): void { root.enabled = true; }
+        function disable(): void { root.enabled = false; }
+    }
+}
+```
+
+#### 2. Add Configuration
+
+Add your toggle configuration to `config/QuickTogglesConfig.qml`:
+
+```qml
+component YourService: JsonObject {
+    property bool enabled: true
+    property string name: "Your Service"
+    property string iconEnabled: "your_enabled_icon"
+    property string iconDisabled: "your_disabled_icon"
+    property string colorScheme: "primary" // primary, secondary, tertiary, error
+    property bool showLoadingState: false // true if you have connecting states
+}
+```
+
+And add it to the Toggles component:
+
+```qml
+component Toggles: JsonObject {
+    // ... existing toggles ...
+    property YourService yourService: YourService {}
+}
+```
+
+#### 3. Add to QuickToggles
+
+Add your toggle to `modules/dashboard/dash/QuickToggles.qml`:
+
+```qml
+// Your Service Toggle
+ToggleButton {
+    service: YourService
+    config: Config.quickToggles.toggles.yourService
+    toggleId: "yourService"
+    visible: Config.quickToggles.toggles.yourService.enabled
+    showLoadingState: Config.quickToggles.toggles.yourService.showLoadingState
+    tooltipsEnabled: Config.quickToggles.tooltips.enabled
+    tooltipDelay: Config.quickToggles.tooltips.delay
+    tooltipTimeout: Config.quickToggles.tooltips.timeout
+    showUnavailableServices: Config.quickToggles.tooltips.showUnavailableServices
+}
+```
+
+### Service Requirements
+
+Your service should implement:
+- `enabled` property (boolean) - Current state of the toggle
+- `toggle()` function - Toggle the state
+- Optional: `available` property (boolean) - Whether the service is available
+- Optional: `connecting` property (boolean) - For loading states
+- Optional: `disconnecting` property (boolean) - For loading states
+
+### Color Schemes
+
+Available color schemes:
+- `"primary"` - Uses Material Design 3 primary colors
+- `"secondary"` - Uses Material Design 3 secondary colors  
+- `"tertiary"` - Uses Material Design 3 tertiary colors
+- `"error"` - Uses Material Design 3 error colors
+
+### Benefits
+
+- **Maintainable**: Single component to maintain for all toggles
+- **Consistent**: All toggles look and behave identically
+- **Flexible**: Highly configurable via JSON
+- **Performant**: Reduced code duplication means faster loading
+- **Extensible**: Easy to add new features to all toggles at once
 
 ## FAQ
 

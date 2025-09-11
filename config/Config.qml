@@ -22,6 +22,7 @@ Singleton {
     property alias lock: adapter.lock
     property alias services: adapter.services
     property alias paths: adapter.paths
+    property alias quickToggles: adapter.quickToggles
 
     FileView {
         path: `${Paths.config}/shell.json`
@@ -46,6 +47,7 @@ Singleton {
             property LockConfig lock: LockConfig {}
             property ServiceConfig services: ServiceConfig {}
             property UserPaths paths: UserPaths {}
+            property QuickTogglesConfig quickToggles: QuickTogglesConfig {}
         }
     }
 }
