@@ -563,7 +563,7 @@ StyledRect {
 
             implicitHeight: Appearance.padding.small
 
-            color: Colours.palette.m3tertiary
+            color: Colours.palette.m3primary
 
             NumberAnimation on implicitWidth {
                 from: root.width

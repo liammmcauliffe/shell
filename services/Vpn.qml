@@ -12,6 +12,8 @@ Singleton {
     property bool available: false
     property string status: "Disconnected"
     property bool needsRegistration: false
+    property bool connecting: false
+    property bool disconnecting: false
 
     // Persistent storage
     PersistentProperties {
@@ -22,12 +24,24 @@ Singleton {
         reloadableId: "vpn"
     }
 
-    // Initialize on startup
     Component.onCompleted: {
+        enabled = false;
+        status = "Disconnected";
         checkAvailability();
+        startupTimer.start();
+    }
+    
+    Timer {
+        id: startupTimer
+        interval: 1000
+        repeat: false
+        onTriggered: {
+            if (available) {
+                checkStatus();
+            }
+        }
     }
 
-    // Check if warp-cli is available
     function checkAvailability(): void {
         checkWarpCli.running = true;
     }
@@ -43,7 +57,6 @@ Singleton {
         }
     }
 
-    // Check current VPN status
     function checkStatus(): void {
         if (!available) return;
         fetchStatus.running = true;
@@ -51,59 +64,144 @@ Singleton {
 
     Process {
         id: fetchStatus
-        command: ["bash", "-c", "warp-cli status 2>/dev/null || echo 'Not Available'"]
-        onExited: (exitCode, exitStatus) => {
-            // For now, we'll use a simple approach and check status differently
-            // The actual status checking will be done when user interacts with the toggle
-            root.status = "Disconnected";
-            root.enabled = false;
+        command: ["bash", "-c", "warp-cli status 2>/dev/null | head -1 || echo 'Disconnected'"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const statusText = text.trim().toLowerCase();
+                if (statusText.includes("connected") && !statusText.includes("disconnected")) {
+                    root.enabled = true;
+                    root.status = "Connected";
+                } else {
+                    root.enabled = false;
+                    root.status = "Disconnected";
+                }
+            }
         }
     }
 
-    // Connect to VPN
     function connect(): void {
-        if (!available) return;
+        if (!available || connecting) return;
         
         if (needsRegistration) {
             register();
         } else {
-            connectProcess.running = true;
+            startConnection();
         }
     }
 
-    // Disconnect from VPN
+    function startConnection(): void {
+        connecting = true;
+        status = "Connecting";
+        connectProcess.running = true;
+        statusCheckTimer.start();
+        connectionTimeoutTimer.start();
+    }
+
     function disconnect(): void {
-        if (!available) return;
+        if (!available || disconnecting) return;
+        
+        if (connecting) {
+            connecting = false;
+            statusCheckTimer.stop();
+            connectionTimeoutTimer.stop();
+        }
+        
+        disconnecting = true;
+        status = "Disconnecting";
         disconnectProcess.running = true;
     }
 
-    // Toggle VPN connection
     function toggle(): void {
         if (!available) return;
         
-        if (enabled) {
+        if (enabled || connecting) {
             disconnect();
         } else {
             connect();
         }
     }
 
-    // Register with Cloudflare WARP
     function register(): void {
         if (!available) return;
         registrationProcess.running = true;
+    }
+
+    Timer {
+        id: statusCheckTimer
+        interval: 1000
+        repeat: true
+        onTriggered: {
+            if (!connecting) {
+                stop();
+                return;
+            }
+            statusCheckProcess.running = true;
+        }
+    }
+
+    Process {
+        id: statusCheckProcess
+        command: ["bash", "-c", "warp-cli status 2>/dev/null | head -1 || echo 'Disconnected'"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                if (!connecting) return;
+                
+                const statusText = text.trim().toLowerCase();
+                if (statusText.includes("connected") && !statusText.includes("disconnected")) {
+                    connecting = false;
+                    enabled = true;
+                    status = "Connected";
+                    statusCheckTimer.stop();
+                    connectionTimeoutTimer.stop();
+                    
+                    Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "low", "Cloudflare WARP", "Connected to Cloudflare WARP"]);
+                }
+            }
+        }
+    }
+
+    Timer {
+        id: connectionTimeoutTimer
+        interval: 5000
+        onTriggered: {
+            if (connecting) {
+                connecting = false;
+                statusCheckTimer.stop();
+                Quickshell.execDetached(["warp-cli", "disconnect"]);
+                Quickshell.execDetached([
+                    "notify-send", 
+                    "-a", "caelestia-shell", 
+                    "-u", "critical", 
+                    "-t", "5000",
+                    "-i", "network-vpn",
+                    "Cloudflare WARP", 
+                    "Failed to connect within 5 seconds. Use the VPN toggle to try again."
+                ]);
+                status = "Disconnected";
+            }
+        }
     }
 
     Process {
         id: connectProcess
         command: ["warp-cli", "connect"]
         onExited: (exitCode, exitStatus) => {
-            if (exitCode === 0) {
-                root.enabled = true;
-                root.status = "Connected";
-                Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "low", "Cloudflare WARP", "Connected to Cloudflare WARP"]);
-            } else {
-                Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "critical", "Cloudflare WARP", "Connection failed. Please check manually with 'warp-cli'"]);
+            if (!connecting) return;
+            
+            if (exitCode !== 0) {
+                connecting = false;
+                statusCheckTimer.stop();
+                connectionTimeoutTimer.stop();
+                status = "Disconnected";
+                Quickshell.execDetached([
+                    "notify-send", 
+                    "-a", "caelestia-shell", 
+                    "-u", "critical", 
+                    "-t", "5000",
+                    "-i", "network-vpn",
+                    "Cloudflare WARP", 
+                    "Connection command failed. Use the VPN toggle to try again."
+                ]);
             }
         }
     }
@@ -112,12 +210,16 @@ Singleton {
         id: disconnectProcess
         command: ["warp-cli", "disconnect"]
         onExited: (exitCode, exitStatus) => {
+            disconnecting = false;
+            
             if (exitCode === 0) {
-                root.enabled = false;
-                root.status = "Disconnected";
+                enabled = false;
+                status = "Disconnected";
                 Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "low", "Cloudflare WARP", "Disconnected from Cloudflare WARP"]);
             } else {
-                Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "critical", "Cloudflare WARP", "Disconnect failed. Please check manually with 'warp-cli'"]);
+                enabled = false;
+                status = "Disconnected";
+                Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "critical", "Cloudflare WARP", "Disconnect command failed, but state updated"]);
             }
         }
     }
@@ -127,19 +229,43 @@ Singleton {
         command: ["warp-cli", "registration", "new"]
         onExited: (exitCode, exitStatus) => {
             if (exitCode === 0) {
-                root.needsRegistration = false;
-                root.status = "Registered";
-                connectProcess.running = true;
+                needsRegistration = false;
+                status = "Registered";
+                startConnection();
             } else {
-                Quickshell.execDetached(["notify-send", "-a", "caelestia-shell", "-u", "critical", "Cloudflare WARP", "Registration failed. Please check manually with 'warp-cli'"]);
+                Quickshell.execDetached([
+                    "notify-send", 
+                    "-a", "caelestia-shell", 
+                    "-u", "critical", 
+                    "-t", "5000",
+                    "-i", "network-vpn",
+                    "Cloudflare WARP", 
+                    "Registration failed. Use the VPN toggle to try again."
+                ]);
             }
         }
     }
 
-    // Note: We don't auto-connect/disconnect on enabled changes
-    // to avoid infinite loops and let user control the connection
+    IpcHandler {
+        target: "vpnRetry"
+        
+        function retry(): void {
+            if (needsRegistration) {
+                register();
+            } else {
+                connect();
+            }
+        }
+        
+        function cancel(): void {
+            connecting = false;
+            disconnecting = false;
+            statusCheckTimer.stop();
+            connectionTimeoutTimer.stop();
+            status = "Disconnected";
+        }
+    }
 
-    // IPC handler for external control
     IpcHandler {
         target: "vpn"
 

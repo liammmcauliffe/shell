@@ -1,4 +1,5 @@
 import qs.components
+import qs.components.controls
 import qs.services
 import qs.config
 import "dash"
@@ -357,8 +358,12 @@ GridLayout {
                 Layout.fillHeight: true
                 Layout.preferredWidth: height // Maintain square aspect ratio
                 Layout.preferredHeight: width // Maintain square aspect ratio
-                radius: Vpn.enabled ? 8 : height / 2 // Perfect circle when unselected, rounded square when selected
-                color: Vpn.enabled ? Colours.palette.m3primary : Colours.palette.m3surfaceContainer
+                radius: (Vpn.enabled || Vpn.connecting) ? 8 : height / 2 // Perfect circle when unselected, rounded square when selected/connecting
+                color: {
+                    if (Vpn.connecting) return Colours.palette.m3primary;
+                    if (Vpn.disconnecting) return Colours.palette.m3error;
+                    return Vpn.enabled ? Colours.palette.m3primary : Colours.palette.m3surfaceContainer;
+                }
                 visible: Vpn.available
                 Behavior on radius {
                     NumberAnimation {
@@ -375,8 +380,12 @@ GridLayout {
                 StateLayer {
                     id: vpnToggle
                     anchors.fill: parent
-                    color: Vpn.enabled ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant
-                    hoverEnabled: true
+                    color: {
+                        if (Vpn.connecting) return Colours.palette.m3primary;
+                        if (Vpn.disconnecting) return Colours.palette.m3onError;
+                        return Vpn.enabled ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant;
+                    }
+                    hoverEnabled: !Vpn.connecting && !Vpn.disconnecting
                     Behavior on color {
                         ColorAnimation {
                             duration: 100
@@ -384,32 +393,65 @@ GridLayout {
                         }
                     }
                     function onClicked(): void {
-                        Vpn.toggle();
+                        if (!Vpn.connecting && !Vpn.disconnecting) {
+                            Vpn.toggle();
+                        }
                     }
                 }
-                MaterialIcon {
+                
+                // Main icon or loading indicator
+                Item {
                     anchors.centerIn: parent
-                    text: Vpn.enabled ? "vpn_key" : "vpn_key_off"
-                    color: Vpn.enabled ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant
-                    font.pointSize: Appearance.font.size.extraLarge
-                    opacity: Vpn.available ? 1.0 : 0.5
-                    Behavior on color {
-                        ColorAnimation {
-                            duration: 100
-                            easing.type: Easing.OutCubic
-                        }
+                    width: parent.width * 0.6
+                    height: parent.height * 0.6
+                    
+                    // Loading spinner for connecting/disconnecting states
+                    StyledBusyIndicator {
+                        anchors.centerIn: parent
+                        strokeWidth: Appearance.padding.small
+                        bgColour: Colours.palette.m3surfaceContainerHigh
+                        fgColour: Vpn.connecting ? Colours.palette.m3onTertiary : Colours.palette.m3onError
+                        implicitSize: Math.min(parent.width, parent.height) * 0.8
+                        running: Vpn.connecting || Vpn.disconnecting
+                        visible: Vpn.connecting || Vpn.disconnecting
                     }
-                    Behavior on opacity {
-                        NumberAnimation {
-                            duration: 100
-                            easing.type: Easing.OutCubic
+                    
+                    // Main icon when not connecting/disconnecting
+                    MaterialIcon {
+                        anchors.centerIn: parent
+                        text: Vpn.enabled ? "shield" : "shield"
+                        color: {
+                            if (Vpn.connecting) return Colours.palette.m3onPrimary;
+                            if (Vpn.disconnecting) return Colours.palette.m3onError;
+                            return Vpn.enabled ? Colours.palette.m3onPrimary : Colours.palette.m3onSurfaceVariant;
+                        }
+                        font.pointSize: Appearance.font.size.extraLarge
+                        opacity: (Vpn.connecting || Vpn.disconnecting) ? 0 : (Vpn.available ? 1.0 : 0.5)
+                        visible: !Vpn.connecting && !Vpn.disconnecting
+                        Behavior on color {
+                            ColorAnimation {
+                                duration: 100
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                        Behavior on opacity {
+                            NumberAnimation {
+                                duration: 100
+                                easing.type: Easing.OutCubic
+                            }
                         }
                     }
                 }
+                
                 // Tooltip
                 ToolTip {
                     visible: vpnToggle.containsMouse
-                    text: Vpn.available ? (Vpn.needsRegistration ? "Cloudflare WARP (Needs Registration)" : "Cloudflare WARP") : "Cloudflare WARP (Not Available)"
+                    text: {
+                        if (Vpn.connecting) return "Connecting to Cloudflare WARP...";
+                        if (Vpn.disconnecting) return "Disconnecting from Cloudflare WARP...";
+                        if (Vpn.needsRegistration) return "Cloudflare WARP (Needs Registration)";
+                        return Vpn.available ? "Cloudflare WARP" : "Cloudflare WARP (Not Available)";
+                    }
                     delay: 500
                     timeout: 3000
 
@@ -420,7 +462,12 @@ GridLayout {
                     }
 
                     contentItem: Text {
-                        text: Vpn.available ? (Vpn.needsRegistration ? "Cloudflare WARP (Needs Registration)" : "Cloudflare WARP") : "Cloudflare WARP (Not Available)"
+                        text: {
+                            if (Vpn.connecting) return "Connecting to Cloudflare WARP...";
+                            if (Vpn.disconnecting) return "Disconnecting from Cloudflare WARP...";
+                            if (Vpn.needsRegistration) return "Cloudflare WARP (Needs Registration)";
+                            return Vpn.available ? "Cloudflare WARP" : "Cloudflare WARP (Not Available)";
+                        }
                         color: Vpn.available ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
                         font.pointSize: Appearance.font.size.small
                         horizontalAlignment: Text.AlignHCenter
