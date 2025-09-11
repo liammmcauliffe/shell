@@ -4,7 +4,6 @@ JsonObject {
     property bool expire: true
     property int defaultExpireTimeout: 5000
     property bool timeoutBar: true
-    property bool timeoutCircle: false
     property real clearThreshold: 0.3
     property int expandThreshold: 20
     property bool actionOnClick: true
