@@ -47,7 +47,7 @@ void CUtils::saveItem(QQuickItem* target, const QUrl& path, const QRect& rect, Q
 
     auto scaledRect = rect;
     const qreal scale = target->window()->devicePixelRatio();
-    if (rect.isValid() && scale != 1.0) {
+    if (rect.isValid() && qFuzzyCompare(scale + 1.0, 2.0)) {
         scaledRect =
             QRectF(rect.left() * scale, rect.top() * scale, rect.width() * scale, rect.height() * scale).toRect();
     }
