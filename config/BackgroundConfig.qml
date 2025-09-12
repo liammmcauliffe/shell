@@ -7,7 +7,7 @@ JsonObject {
 
     component DesktopClock: JsonObject {
         property bool enabled: true
-        property string position: "random" // "center", "top-left", "top-right", "bottom-left", "bottom-right", "random", "custom"
+        property string position: "center" // "center", "top-left", "top-right", "bottom-left", "bottom-right", "random", "custom"
         property bool showDate: true
         property bool showSeconds: false
         property string size: "normal" // "small", "normal", "large"
