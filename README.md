@@ -332,6 +332,81 @@ default, you must create it manually.
     },
     "rounding": {
       "scale": 1
+    "bar": {
+        "clock": {
+            "showIcon": true
+        },
+        "dragThreshold": 20,
+        "entries": [
+            {
+                "id": "logo",
+                "enabled": true
+            },
+            {
+                "id": "workspaces",
+                "enabled": true
+            },
+            {
+                "id": "spacer",
+                "enabled": true
+            },
+            {
+                "id": "activeWindow",
+                "enabled": true
+            },
+            {
+                "id": "spacer",
+                "enabled": true
+            },
+            {
+                "id": "tray",
+                "enabled": true
+            },
+            {
+                "id": "clock",
+                "enabled": true
+            },
+            {
+                "id": "statusIcons",
+                "enabled": true
+            },
+            {
+                "id": "power",
+                "enabled": true
+            }
+        ],
+        "persistent": true,
+        "scrollActions": {
+            "brightness": true,
+            "workspaces": true,
+            "volume": true
+        },
+        "showOnHover": true,
+        "status": {
+            "showAudio": false,
+            "showBattery": true,
+            "showBluetooth": true,
+            "showKbLayout": false,
+            "showMicrophone": false,
+            "showNetwork": true,
+            "showLockStatus": true
+        },
+        "tray": {
+            "background": false,
+            "iconSubs": [],
+            "recolour": false
+        },
+        "workspaces": {
+            "activeIndicator": true,
+            "activeLabel": "󰮯",
+            "activeTrail": false,
+            "label": "  ",
+            "occupiedBg": false,
+            "occupiedLabel": "󰮯",
+            "perMonitorWorkspaces": true,
+            "showWindows": true,
+            "shown": 5
+        }
     },
     "spacing": {
       "scale": 1
@@ -402,10 +477,6 @@ default, you must create it manually.
         "id": "power",
         "enabled": true
       },
-      {
-        "id": "idleInhibitor",
-        "enabled": false
-      }
     ],
     "persistent": true,
     "scrollActions": {
