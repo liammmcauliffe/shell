@@ -40,7 +40,7 @@ Singleton {
             // Kill any existing hyprsunset process first
             Quickshell.execDetached(["pkill", "hyprsunset"]);
             // Wait a moment then enable night mode - set warm temperature (4000K)
-            Quickshell.execDetached(["bash", "-c", "sleep 0.1 && hyprsunset --temperature 4000"]);
+            Quickshell.execDetached(["bash", "-c", "sleep 0.13 && hyprsunset --temperature 4000"]);
         } else {
             // Disable night mode - kill hyprsunset process to reset colors
             Quickshell.execDetached(["pkill", "hyprsunset"]);
