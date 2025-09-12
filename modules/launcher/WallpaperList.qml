@@ -13,7 +13,7 @@ PathView {
     required property TextField search
     required property PersistentProperties visibilities
     required property var panels
-    required property var wrapper
+    required property var content
 
     readonly property int itemWidth: Config.launcher.sizes.wallpaperWidth * 0.8 + Appearance.padding.larger * 2
 
@@ -24,7 +24,7 @@ PathView {
 
         // Screen width - 4x outer rounding - 2x max side thickness (cause centered)
         let outerMargins = Math.max(Config.border.thickness, panels.bar.implicitWidth);
-        if (panels.popouts.hasCurrent && panels.popouts.currentCenter + panels.popouts.nonAnimHeight / 2 > screen.height - wrapper.implicitHeight - Config.border.thickness * 2)
+        if (panels.popouts.hasCurrent && panels.popouts.currentCenter + panels.popouts.nonAnimHeight / 2 > screen.height - content.implicitHeight - Config.border.thickness * 2)
             outerMargins = panels.bar.implicitWidth + panels.popouts.nonAnimWidth;
         const maxWidth = screen.width - Config.border.rounding * 4 - outerMargins * 2;
 
