@@ -70,7 +70,7 @@ StyledRect {
         height: parent.height * 0.6
 
         // Loading indicator (for services like VPN)
-        StyledBusyIndicator {
+        CircularIndicator {
             anchors.centerIn: parent
             strokeWidth: Appearance.padding.small
             bgColour: Colours.palette.m3surfaceContainerHigh
