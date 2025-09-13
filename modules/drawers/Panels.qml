@@ -62,6 +62,7 @@ Item {
     Launcher.Wrapper {
         id: launcher
 
+        screen: root.screen
         visibilities: root.visibilities
         panels: root
 
@@ -99,7 +100,7 @@ Item {
     Utilities.Wrapper {
         id: utilities
 
-        visibility: root.visibilities.utilities
+        visibilities: root.visibilities
 
         anchors.bottom: parent.bottom
         anchors.right: parent.right
