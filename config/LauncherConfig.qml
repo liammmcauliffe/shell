@@ -35,7 +35,12 @@ JsonObject {
         "vim",
         "bssh",
         "bvnc",
-        "com.cloudflare.WarpTaskbar"
+        "com.cloudflare.WarpTaskbar",
+        "lstopo",
+        "linguist",
+        "assistant",
+        "qdbusviewer",
+        "designer"
     ]
     property UseFuzzy useFuzzy : UseFuzzy {}
     property Sizes sizes : Sizes {}
