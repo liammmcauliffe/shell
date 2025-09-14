@@ -7,13 +7,13 @@ JsonObject {
 
     component DesktopClock: JsonObject {
         property bool enabled: true
-        property string position: "bottom-right" // "center", "top-left", "top-right", "bottom-left", "bottom-right", "random", "custom"
+        property string position: "custom" // "center", "top-left", "top-right", "bottom-left", "bottom-right", "random", "custom"
         property bool showDate: true
         property bool showSeconds: false
         property string size: "normal" // "small", "normal", "large"
         property string dateFormat: "dddd, MMMM dd, yyyy" // Custom date format
-        property int customX: 0 // Custom X position (when position is "custom")
-        property int customY: 0 // Custom Y position (when position is "custom")
+        property int customX: 250 // Custom X position (when position is "custom")
+        property int customY: 150 // Custom Y position (when position is "custom")
     }
 
     component Visualiser: JsonObject {
