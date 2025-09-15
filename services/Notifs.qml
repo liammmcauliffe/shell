@@ -57,6 +57,22 @@ Singleton {
             for (const notif of root.list)
                 notif.popup = false;
         }
+
+        function isDndEnabled(): bool {
+            return props.dnd;
+        }
+
+        function toggleDnd(): void {
+            props.dnd = !props.dnd;
+        }
+
+        function enableDnd(): void {
+            props.dnd = true;
+        }
+
+        function disableDnd(): void {
+            props.dnd = false;
+        }
     }
 
     component Notif: QtObject {

@@ -40,7 +40,7 @@ JsonObject {
         "linguist",
         "assistant",
         "qdbusviewer",
-        "designer"
+        "designer@"
     ]
     property UseFuzzy useFuzzy : UseFuzzy {}
     property Sizes sizes : Sizes {}

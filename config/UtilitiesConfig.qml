@@ -6,6 +6,6 @@ JsonObject {
     property Sizes sizes: Sizes {}
 
     component Sizes: JsonObject {
-        property int width: 400
+        property int width: 430
     }
 }

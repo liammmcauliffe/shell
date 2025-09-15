@@ -2,11 +2,23 @@ pragma Singleton
 
 import Quickshell
 import Quickshell.Io
+import QtQuick
 
 Singleton {
     id: root
 
     property alias enabled: props.enabled
+
+    function setDynamicConfs(): void {
+        Quickshell.execDetached(["hyprctl", "--batch", "keyword animations:enabled 0;keyword decoration:shadow:enabled 0;keyword decoration:blur:enabled 0;keyword general:gaps_in 0;keyword general:gaps_out 0;keyword general:border_size 1;keyword decoration:rounding 0;keyword general:allow_tearing 1"]);
+    }
+
+    onEnabledChanged: {
+        if (enabled)
+            setDynamicConfs();
+        else
+            Quickshell.execDetached(["hyprctl", "reload"]);
+    }
 
     PersistentProperties {
         id: props
@@ -16,26 +28,20 @@ Singleton {
         reloadableId: "gameMode"
     }
 
-    // Process to check current gamemode state
-    Process {
-        id: checkStateProcess
-        running: true
-        command: ["bash", "-c", `test "$(hyprctl getoption animations:enabled -j | jq ".int")" -ne 0`]
-        
-        onExited: (exitCode, exitStatus) => {
-            // Inverted because enabled = nonzero exit (animations disabled = gamemode on)
-            props.enabled = exitCode !== 0;
+    Connections {
+        target: Hypr
+
+        function onConfigReloaded(): void {
+            if (props.enabled)
+                root.setDynamicConfs();
         }
     }
 
-    // Watch for enabled changes
-    onEnabledChanged: {
-        if (enabled) {
-            // Apply gamemode optimizations using batch command
-            Quickshell.execDetached(["bash", "-c", `hyprctl --batch "keyword animations:enabled 0; keyword decoration:shadow:enabled 0; keyword decoration:blur:enabled 0; keyword general:gaps_in 0; keyword general:gaps_out 0; keyword general:border_size 1; keyword decoration:rounding 0; keyword general:allow_tearing 1; keyword decoration:active_opacity 1.0; keyword decoration:inactive_opacity 1.0"`]);
-        } else {
-            // Restore settings by reloading Hyprland config
-            Quickshell.execDetached(["hyprctl", "reload"]);
+    Process {
+        running: true
+        command: ["hyprctl", "getoption", "animations:enabled", "-j"]
+        stdout: StdioCollector {
+            onStreamFinished: props.enabled = JSON.parse(text).int === 0
         }
     }
 
@@ -43,19 +49,19 @@ Singleton {
         target: "gameMode"
 
         function isEnabled(): bool {
-            return root.enabled;
+            return props.enabled;
         }
 
         function toggle(): void {
-            root.enabled = !root.enabled;
+            props.enabled = !props.enabled;
         }
 
         function enable(): void {
-            root.enabled = true;
+            props.enabled = true;
         }
 
         function disable(): void {
-            root.enabled = false;
+            props.enabled = false;
         }
     }
 }
