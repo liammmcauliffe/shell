@@ -1,8 +1,6 @@
 import qs.components.controls
-import qs.services
 import qs.config
 import qs.modules.bar.popouts as BarPopouts
-import qs.modules.osd as Osd
 import Quickshell
 import QtQuick
 
@@ -15,7 +13,6 @@ CustomMouseArea {
     required property Panels panels
     required property Item bar
 
-    property bool osdHovered
     property point dragStart
     property bool dashboardShortcutActive
     property bool osdShortcutActive
@@ -62,7 +59,7 @@ CustomMouseArea {
             // Only hide if not activated by shortcut
             if (!osdShortcutActive) {
                 visibilities.osd = false;
-                osdHovered = false;
+                root.panels.osd.hovered = false;
             }
 
             if (!dashboardShortcutActive)
@@ -105,11 +102,11 @@ CustomMouseArea {
         // Always update visibility based on hover if not in shortcut mode
         if (!osdShortcutActive) {
             visibilities.osd = showOsd;
-            osdHovered = showOsd;
+            root.panels.osd.hovered = showOsd;
         } else if (showOsd) {
             // If hovering over OSD area while in shortcut mode, transition to hover control
             osdShortcutActive = false;
-            osdHovered = true;
+            root.panels.osd.hovered = true;
         }
 
         // Show/hide session on drag
@@ -192,7 +189,7 @@ CustomMouseArea {
                 }
                 if (!inOsdArea) {
                     root.visibilities.osd = false;
-                    root.osdHovered = false;
+                    root.panels.osd.hovered = false;
                 }
             }
         }
@@ -235,11 +232,5 @@ CustomMouseArea {
                 root.utilitiesShortcutActive = false;
             }
         }
-    }
-
-    Osd.Interactions {
-        screen: root.screen
-        visibilities: root.visibilities
-        hovered: root.osdHovered
     }
 }

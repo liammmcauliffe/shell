@@ -326,6 +326,17 @@ default, you must create it manually.
       "size": {
         "scale": 1
       }
+   "general": {
+        "apps": {
+            "terminal": ["foot"],
+            "audio": ["pavucontrol"]
+        },
+        "idle": {
+            "inhibitWhenAudio": true,
+            "lockTimeout": 180,
+            "dpmsTimeout": 300,
+            "sleepTimeout": 600
+        }
     },
     "padding": {
       "scale": 1
