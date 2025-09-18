@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 
 import qs.components.misc
 import qs.config
+import qs.utils
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
@@ -14,6 +15,33 @@ Singleton {
     readonly property list<Notif> list: []
     readonly property list<Notif> popups: list.filter(n => n.popup)
     readonly property Component notifComp: notifComp
+    property alias dnd: props.dnd
+
+    property bool loaded
+
+    onListChanged: {
+        if (!loaded)
+            return;
+
+        storage.setText(JSON.stringify(list.filter(n => !n.closed).map(n => ({
+                    id: n.id,
+                    summary: n.summary,
+                    body: n.body,
+                    appIcon: n.appIcon,
+                    appName: n.appName,
+                    image: n.image,
+                    expireTimeout: n.expireTimeout,
+                    urgency: n.urgency
+                }))));
+    }
+
+    PersistentProperties {
+        id: props
+
+        property bool dnd
+
+        reloadableId: "notifs"
+    }
 
     NotificationServer {
         id: server
@@ -24,6 +52,7 @@ Singleton {
         bodyImagesSupported: true
         bodyMarkupSupported: true
         imageSupported: true
+        persistenceSupported: true
 
         onNotification: notif => {
             notif.tracked = true;
@@ -34,14 +63,22 @@ Singleton {
                 DoNotDisturb.pending.push(notif);
             } else {
                 root.list.push(notifComp.createObject(root, {
-                    popup: true,
+                    popup: !props.dnd && ![...Visibilities.screens.values()].some(v => v.sidebar),
                     notification: notif
                 }));
             }
-           root.list.push(notifComp.createObject(root, {
-                popup: !props.dnd,
-                notification: notif
-            }));
+        }
+    }
+
+    FileView {
+        id: storage
+
+        path: `${Paths.state}/notifs.json`
+        onLoaded: {
+            const data = JSON.parse(text());
+            for (const notif of data)
+                root.list.push(notifComp.createObject(root, notif));
+            root.loaded = true;
         }
     }
 
@@ -83,7 +120,10 @@ Singleton {
         id: notif
 
         property bool popup
-        readonly property date time: new Date()
+        property bool closed
+        property var locks: new Set()
+
+        property date time: new Date()
         readonly property string timeStr: {
             const diff = Time.date.getTime() - time.getTime();
             const m = Math.floor(diff / 60000);
@@ -96,18 +136,20 @@ Singleton {
             return `${h}h`;
         }
 
-        required property Notification notification
-        readonly property string summary: notification.summary
-        readonly property string body: notification.body
-        readonly property string appIcon: notification.appIcon
-        readonly property string appName: notification.appName
-        readonly property string image: notification.image
-        readonly property int urgency: notification.urgency
-        readonly property list<NotificationAction> actions: notification.actions
+        property Notification notification
+        property string id: notification?.id ?? ""
+        property string summary: notification?.summary ?? ""
+        property string body: notification?.body ?? ""
+        property string appIcon: notification?.appIcon ?? ""
+        property string appName: notification?.appName ?? ""
+        property string image: notification?.image ?? ""
+        property real expireTimeout: notification?.expireTimeout ?? Config.notifs.defaultExpireTimeout
+        property int urgency: notification?.urgency ?? NotificationUrgency.Normal
+        readonly property list<NotificationAction> actions: notification?.actions ?? []
 
         readonly property Timer timer: Timer {
             running: true
-            interval: notif.notification.expireTimeout > 0 ? notif.notification.expireTimeout : Config.notifs.defaultExpireTimeout
+            interval: notif.expireTimeout > 0 ? notif.expireTimeout : Config.notifs.defaultExpireTimeout
             onTriggered: {
                 if (Config.notifs.expire)
                     notif.popup = false;
@@ -115,14 +157,33 @@ Singleton {
         }
 
         readonly property Connections conn: Connections {
-            target: notif.notification.Retainable
+            target: notif.notification
 
-            function onDropped(): void {
-                root.list.splice(root.list.indexOf(notif), 1);
+            function onClosed(): void {
+                notif.close();
             }
+        }
 
-            function onAboutToDestroy(): void {
-                notif.destroy();
+        function lock(item: Item): void {
+            locks.add(item);
+        }
+
+        function unlock(item: Item): void {
+            locks.delete(item);
+
+            if (closed && locks.size === 0 && root.list.includes(this)) {
+                root.list.splice(root.list.indexOf(this), 1);
+                notification?.dismiss();
+                destroy();
+            }
+        }
+
+        function close(): void {
+            closed = true;
+            if (locks.size === 0 && root.list.includes(this)) {
+                root.list.splice(root.list.indexOf(this), 1);
+                notification?.dismiss();
+                destroy();
             }
         }
     }
