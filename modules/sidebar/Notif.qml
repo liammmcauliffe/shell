@@ -13,7 +13,7 @@ StyledRect {
     required property Props props
     required property bool expanded
 
-    readonly property real nonAnimHeight: expanded ? summary.implicitHeight + expandedContent.implicitHeight + expandedContent.anchors.topMargin + Appearance.padding.normal * 2 : summary.implicitHeight
+    readonly property real nonAnimHeight: expanded ? summary.implicitHeight + expandedContent.implicitHeight + expandedContent.anchors.topMargin + Appearance.padding.normal * 2 : summaryHeightMetrics.height
 
     implicitHeight: nonAnimHeight
 
@@ -34,13 +34,21 @@ StyledRect {
             timeStr.anchors.margins: Appearance.padding.normal
             expandedContent.anchors.margins: Appearance.padding.normal
             summary.width: root.width - Appearance.padding.normal * 2 - timeStr.implicitWidth - Appearance.spacing.small
+            summary.maximumLineCount: Number.MAX_SAFE_INTEGER
         }
     }
 
     transitions: Transition {
         Anim {
-            properties: "margins,width"
+            properties: "margins,width,maximumLineCount"
         }
+    }
+
+    TextMetrics {
+        id: summaryHeightMetrics
+
+        font: summary.font
+        text: " " // Use this height to prevent weird characters from changing the line height
     }
 
     StyledText {
@@ -53,6 +61,8 @@ StyledRect {
         text: root.modelData.summary
         color: root.modelData.urgency === "critical" ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
         elide: Text.ElideRight
+        wrapMode: Text.WordWrap
+        maximumLineCount: 1
     }
 
     StyledText {
@@ -106,7 +116,7 @@ StyledRect {
         anchors.topMargin: Appearance.spacing.small / 2
 
         sourceComponent: ColumnLayout {
-            spacing: Math.floor(Appearance.spacing.small / 2)
+            spacing: Appearance.spacing.smaller
 
             StyledText {
                 Layout.fillWidth: true
@@ -114,6 +124,10 @@ StyledRect {
                 text: root.modelData.body.replace(/(.)\n(?!\n)/g, "$1\n\n") || qsTr("No body here! :/")
                 color: root.modelData.urgency === "critical" ? Colours.palette.m3secondary : Colours.palette.m3outline
                 wrapMode: Text.WordWrap
+            }
+
+            NotifActionList {
+                notif: root.modelData
             }
         }
     }

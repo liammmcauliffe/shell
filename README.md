@@ -598,6 +598,10 @@ default, you must create it manually.
             "reboot": ["systemctl", "reboot"]
         }
     },
+    "sidebar": {
+        "dragThreshold": 80,
+        "enabled": true
+    },
     "utilities": {
         "enabled": true
     }
